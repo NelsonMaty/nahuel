@@ -27,7 +27,7 @@
           <input type="text" class="form-control" placeholder="Por nombre" ng-model="searched.name">
          </div>
          <div class="col-md-2">
-          <input type="text" class="form-control" placeholder="Por país" ng-model="searched.country">
+          <input type="text" class="form-control" placeholder="Por país" ng-model="searched.country" typeahead="country.name for country in countries | filter:$viewValue">
          </div>
          <div class="col-md-1">
           <button type="button" class="btn btn-hover btn-md btn-danger" ng-click="clearFilter()"popover="Restablecer." popover-trigger="mouseenter" popover-placement="bottom" popover-popup-delay="350">
@@ -57,7 +57,7 @@
         <td>{{center.level}}</td>
         <td>{{center.acronym}}</td>
         <td>{{center.name}}</td>
-        <td>{{center.country}}</td>
+        <td> <img ng-src="images/flags/{{center.country.iso2}}.png"/> {{center.country.name}}</td>
       </tr>
     </tbody>
   </table>

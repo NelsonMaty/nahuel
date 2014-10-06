@@ -10,64 +10,99 @@
 angular.module('nahuel11App')
   .controller('MainCtrl', function ($scope) {
 
-  	//hardcoded study centers, replace with a REST call
+  	//hardcoded data, replace with a REST call
     $scope.studyCenters = [
       {'id' : '1',
        'type':'Pública',
        'level':'Universidad',
   	   'acronym':'UNC',
   	   'name':'Universidad Nacional de Córdoba',
-  	   'country':'Argentina'
+  	   'country':
+  	   	 {'name':'Argentina',
+  	   	  'iso2' : 'ar'
+  		 }
   	  },
   	  {'id' : '2',
   	   'type':'Privada',
        'level':'Universidad',
   	   'acronym':'IUA',
   	   'name':'Instituto Universitario Aeronáutico',
-  	   'country':'Argentina'
+  	   'country':
+  	   	 {'name':'Argentina',
+  	   	  'iso2' : 'ar'
+  		 }
   	  },
   	  {'id' : '3',
   	   'type':'Pública',
        'level':'Colegio',
   	   'acronym':'CNM',
   	   'name':'Colegio Nacional de Monserrat',
-  	   'country':'Argentina'
-  	  },
-  	  {'id' : '4',
-  	   'type':'Privada',
-       'level':'Universidad',
-  	   'acronym':'INSA',
-  	   'name':'Institut National des Sciences Apliquées',
-  	   'country':'Francia'
-  	  },
-  	  {'id' : '5',
-  	   'type':'Privada',
-       'level':'Universidad',
-  	   'acronym':'UCC',
-  	   'name':'Universidad Católica de Córdoba',
-  	   'country':'Argentina'
-  	  },
-  	  {'id' : '6',
-  	   'type':'Privada',
-       'level':'Universidad',
-  	   'acronym':'UP',
-  	   'name':'Universidad de Palermo',
-  	   'country':'Argentina'
-  	  },
-  	  {'id' : '7',
-  	   'type':'Pública',
-       'level':'Universidad',
-  	   'acronym':'UBA',
-  	   'name':'Universidad de Buenos Aires',
-  	   'country':'Argentina'
+  	   'country':
+  	   	 {'name':'Argentina',
+  	   	  'iso2' : 'ar'
+  		 }
   	  },
   	  {'id' : '8',
   	   'type':'Pública',
        'level':'Universidad',
   	   'acronym':'UNIFESP',
   	   'name':'Universidad Federal de San Pablo',
-  	   'country':'Brasil'
+  	   'country':
+  	   	 {'name':'Brasil',
+  	   	  'iso2' : 'br'
+  		 }
+  	  },
+  	  {'id' : '5',
+  	   'type':'Privada',
+       'level':'Universidad',
+  	   'acronym':'UCC',
+  	   'name':'Universidad Católica de Córdoba',
+  	   'country':
+  	   	 {'name':'Argentina',
+  	   	  'iso2' : 'ar'
+  		 }
+  	  },
+  	  {'id' : '6',
+  	   'type':'Privada',
+       'level':'Universidad',
+  	   'acronym':'UP',
+  	   'name':'Universidad de Palermo',
+  	   'country':
+  	   	 {'name':'Argentina',
+  	   	  'iso2' : 'ar'
+  		 }
+  	  },
+  	  {'id' : '7',
+  	   'type':'Pública',
+       'level':'Universidad',
+  	   'acronym':'UBA',
+  	   'name':'Universidad de Buenos Aires',
+  	   'country':
+  	   	 {'name':'Argentina',
+  	   	  'iso2' : 'ar'
+  		 }
+  	  },
+  	  {'id' : '4',
+  	   'type':'Privada',
+       'level':'Universidad',
+  	   'acronym':'INSA',
+  	   'name':'Institut National des Sciences Apliquées',
+  	   'country':
+  	   	 {'name':'Francia',
+  	   	  'iso2' : 'fr'
+  		 }
   	  }
+    ];
+    $scope.countries = [
+      {'name':'Argentina',
+        'iso2' : 'ar'
+      },
+      {'name':'Brasil',
+        'iso2': 'br'
+      },
+      {'name':'Francia',
+       'iso2' : 'fr'
+      }
     ];
 
 	//clear search criteria
