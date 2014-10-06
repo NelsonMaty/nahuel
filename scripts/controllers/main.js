@@ -46,6 +46,27 @@ angular.module('nahuel11App')
   	   'acronym':'UCC',
   	   'name':'Universidad Católica de Córdoba',
   	   'country':'Argentina'
+  	  },
+  	  {'id' : '6',
+  	   'type':'Privada',
+       'level':'Universidad',
+  	   'acronym':'UP',
+  	   'name':'Universidad de Palermo',
+  	   'country':'Argentina'
+  	  },
+  	  {'id' : '7',
+  	   'type':'Pública',
+       'level':'Universidad',
+  	   'acronym':'UBA',
+  	   'name':'Universidad de Buenos Aires',
+  	   'country':'Argentina'
+  	  },
+  	  {'id' : '8',
+  	   'type':'Pública',
+       'level':'Universidad',
+  	   'acronym':'UNIFESP',
+  	   'name':'Universidad Federal de San Pablo',
+  	   'country':'Brasil'
   	  }
     ];
 
@@ -68,5 +89,14 @@ angular.module('nahuel11App')
 
   	//search panel state
   	$scope.isCollapsed = true;
+
+  	//pagination
+  	$scope.maxSize = 5;
+  	$scope.totalItems = 175;
+  	$scope.currentPage = 1;
+
+  	$scope.setPage = function (pageNo) {
+  		$scope.currentPage = pageNo;
+  	};
 
   });
