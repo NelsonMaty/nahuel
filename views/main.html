@@ -1,0 +1,78 @@
+<div class="container">
+  <div class="page-header">
+
+    <h2>Listado de centros educativos. <br/>
+      <small>Seleccione el centro educativo que desea gestionar.</small>
+    </h2>
+
+  </div>
+
+  <div collapse="isCollapsed">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h4 class="panel-title">Filtros de búsqueda</h4>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+         <div class="col-md-2">
+          <input type="text" class="form-control" placeholder="Por tipo" ng-model="searched.type">
+         </div>
+         <div class="col-md-2">
+          <input type="text" class="form-control" placeholder="Por nivel" ng-model="searched.level">
+         </div>
+         <div class="col-md-2">
+          <input type="text" class="form-control" placeholder="Por sigla" ng-model="searched.acronym">
+         </div>
+         <div class="col-md-3">
+          <input type="text" class="form-control" placeholder="Por nombre" ng-model="searched.name">
+         </div>
+         <div class="col-md-2">
+          <input type="text" class="form-control" placeholder="Por país" ng-model="searched.country">
+         </div>
+         <div class="col-md-1">
+          <button type="button" class="btn btn-hover btn-md btn-danger" ng-click="clearFilter()"popover="Restablecer." popover-trigger="mouseenter" popover-placement="bottom" popover-popup-delay="350">
+            <span class="glyphicon glyphicon-remove"></span>
+          </button>
+         </div>
+       </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th>Nivel educativo</th>
+        <th>Sigla</th>
+        <th>Nombre</th>
+        <th>Pais</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="center in studyCenters | filter:searched"
+      ng-click="setSelected(center.id)"
+      ng-class="{info: center.id == selectedCenterId}">
+        <td>{{center.type}}</td>
+        <td>{{center.level}}</td>
+        <td>{{center.acronym}}</td>
+        <td>{{center.name}}</td>
+        <td>{{center.country}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr/></br></br>
+
+  <div class="pull-right">
+    <button class="btn btn-default" ng-click="isCollapsed = !isCollapsed">
+      <span class="glyphicon glyphicon-search"/>
+      Buscar
+    </button>
+
+    <button class="btn btn-success {{btnState}}" >
+      <span class="glyphicon glyphicon-ok"/>
+      Gestionar centro
+    </button>
+  </div>
+</div>
