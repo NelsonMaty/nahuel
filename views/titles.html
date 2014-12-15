@@ -22,7 +22,6 @@
             		<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown"> ▼</button>
 
                      <!-- SEARCH FORM -->
-
                       <form class="dropdown-menu form-horizontal dropdown-panel">
                         <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
@@ -97,37 +96,11 @@
 	</div>
 </div>
 
-<!-- TITLE TREE -->
-<!-- Nested node template -->
-<script type="text/ng-template" id="nodes_renderer.html">
-  <div ui-tree-handle class="glyphicon" > 
-    <span class="glyphicon" ng-class="getNodeStyle(node)"></span><div style="display:inline;" ng-click="toggle(this)">{{node.title}}</div>
-  </div>
-  <ol ui-tree-nodes ng-model="node.items" ng-class="{ 'hidden': collapsed}">
-    <li ng-repeat="node in node.items" ui-tree-node ng-include="'nodes_renderer.html'">
-    </li>
-  </ol>
-</script>
-
-
-<div class="datagrid col-md-2" style="padding: 10px;">
-
-	<span style="color:#F8B21C; font-weight:bold;" >
-		Todos los Títulos y Carreras 
-	</span>
-
-    <ui-tree callbacks="callbacks" drag-enabled="false" expand-on-hover="true">
-      <ol ui-tree-nodes ng-model="titleTree" style=" margin-top:10px">
-        <li ng-repeat="node in titleTree" ui-tree-node ng-include="'nodes_renderer.html'"></li>
-      </ol>
-    </ui-tree>
-</div>
-
 <!-- TABLE -->
 <div class="datagrid col-md-10">
 	<table >
     <thead >
-    	<tr>
+      <tr>
         <th>Unidad Académica</th>
         <th width="85">Código de Carrera</th>
         <th>Nombre de Carrera</th>

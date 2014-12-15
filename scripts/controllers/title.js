@@ -9,45 +9,6 @@
  */
 angular.module('nahuel11App')
   .controller('TitleCtrl', function ($scope) {
-    /*Tree handler*/
-    $scope.callbacks = {
-    };
-
-  	$scope.toggle = function(scope) {
-      scope.toggle();
-    };
-
-	$scope.getNodeStyle = function(scope){
-		if(scope.nodeType == 'academicUnit')
-			return "glyphicon-home icon-colour";
-		if(scope.nodeType == 'career')
-			return "glyphicon-briefcase icon-colour";
-		if(scope.nodeType == 'title')
-			return "glyphicon-bookmark icon-colour";
-	};
-
-	$scope.isLeaf = function(scope) {
-		if(scope.items.length == 0)
-			return true;
-		else
-			return false;
-	};
-
-/*	
-	$scope.isAcademicUnit = function(scope) {
-		if(scope.depth() == 0)
-			return true;
-		else
-			return false;
-	};
-
-	$scope.isCareer = function(scope) {
-		if(scope.items.length == 0 || scope.depth() == 0)
-			return false;
-		else
-			return true;
-	};*/
-
 
 	/*Tree hardcoded data*/
 	$scope.titleTree = [
