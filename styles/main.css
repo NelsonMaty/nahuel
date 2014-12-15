@@ -1,6 +1,11 @@
 /* UI Bootstrap requirement */
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
+/* Context menu requirement */
+.position-fixed {
+  position: fixed;
+}
+
 /* color button on hover */
 .btn-hover {
   font-weight: normal;

@@ -13,13 +13,15 @@ angular
     'ngAnimate',
     'ngResource',
     'ngRoute',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ng-context-menu',
+    'ui.tree'
   ])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        templateUrl: 'views/titles.html',
+        controller: 'TitleCtrl'
       })
       .when('/about', {
         templateUrl: 'views/about.html',

@@ -1,0 +1,157 @@
+
+<!-- PAGE TITLE -->
+<div class="col-md-10 col-md-offset-2 title">
+	<strong>UNC Universidad Nacional de Córdoba - Títulos Vigentes</strong>
+</div>
+
+<!-- CREATE BUTTON -->
+<div class="col-md-2" style="text-align: center;">
+	<button type="button" class="btn btn-success"> 
+		Dar de alta un título 
+	</button>
+</div>
+
+<!-- SEARCH INPUT -->
+<div class="col-md-3">
+	<div class="inner-addon right-addon">
+		<div class="input-group input-group-sm">
+        	<i class="glyphicon glyphicon-search" ></i>
+    		<input type="text" class="form-control" placeholder="Buscar" ng-model="query"/> 
+    		<span class="input-group-btn ">
+               <div class="dropdown">
+            		<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown"> ▼</button>
+
+                     <!-- SEARCH FORM -->
+
+                      <form class="dropdown-menu form-horizontal dropdown-panel">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+                            <div class="col-sm-10">
+                              <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+                            <div class="col-sm-10">
+                              <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                              <div class="checkbox">
+                                <label>
+                                  <input type="checkbox"> Remember me
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                              <button type="submit" class="btn btn-default">Sign in</button>
+                            </div>
+                          </div>
+                       </form>
+                    </div>
+      		    </span>
+
+      	</div>
+	</div>
+</div>
+
+<!-- SEARCH RADIO BUTTONS -->
+<div class="col-md-7">
+
+	<div class="radio-button-width"> 
+		<label class="radio-inline">
+		  <input type="radio" name="searchOptions" id="inlineRadio1" value="1" ng-model="statusOption"> <small>Títulos Pendientes</small>
+		</label>
+       <span class="badge">{{countStates(1)}}</span>
+	</div>
+
+	<div class="radio-button-width"> 
+    <label class="radio-inline">
+      <input type="radio" name="searchOptions" id="inlineRadio1" value="4" ng-model="statusOption"> <small>Títulos No Vigentes con Actividad</small>
+	</label>
+    <span class="badge">{{countStates(4)}}</span>
+	</div>
+
+    <div class="radio-button-width"> 
+    <label class="radio-inline">
+      <input type="radio" name="searchOptions" id="inlineRadio1" value="3" ng-model="statusOption"> <small>Títulos Vigentes</small>
+    </label>
+    <span class="badge">{{countStates(3)}}</span>
+    </div>
+    <div class="radio-button-width"> 
+    <label class="radio-inline">
+      <input type="radio" name="searchOptions" id="inlineRadio1" value="2" ng-model="statusOption"> <small>Títulos Pendientes con Código ONA</small>
+    </label>
+    <span class="badge">{{countStates(2)}}</span>
+    </div>
+
+
+	<div class="radio-button-width"> 
+	<label class="radio-inline">
+	  <input type="radio" name="searchOptions" id="inlineRadio1" value="5" ng-model="statusOption"> <small>Títulos No Vigentes sin Actividad</small>
+	</label>
+    <span class="badge">{{countStates(5)}}</span>
+	</div>
+</div>
+
+<!-- TITLE TREE -->
+<!-- Nested node template -->
+<script type="text/ng-template" id="nodes_renderer.html">
+  <div ui-tree-handle class="glyphicon" > 
+    <span class="glyphicon" ng-class="getNodeStyle(node)"></span><div style="display:inline;" ng-click="toggle(this)">{{node.title}}</div>
+  </div>
+  <ol ui-tree-nodes ng-model="node.items" ng-class="{ 'hidden': collapsed}">
+    <li ng-repeat="node in node.items" ui-tree-node ng-include="'nodes_renderer.html'">
+    </li>
+  </ol>
+</script>
+
+
+<div class="datagrid col-md-2" style="padding: 10px;">
+
+	<span style="color:#F8B21C; font-weight:bold;" >
+		Todos los Títulos y Carreras 
+	</span>
+
+    <ui-tree callbacks="callbacks" drag-enabled="false" expand-on-hover="true">
+      <ol ui-tree-nodes ng-model="titleTree" style=" margin-top:10px">
+        <li ng-repeat="node in titleTree" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+      </ol>
+    </ui-tree>
+</div>
+
+<!-- TABLE -->
+<div class="datagrid col-md-10">
+	<table >
+    <thead >
+    	<tr>
+        <th>Unidad Académica</th>
+        <th width="85">Código de Carrera</th>
+        <th>Nombre de Carrera</th>
+        <th width="85">Código de Título</th>
+        <th>Nombre de Título</th>
+        <th>Tipo de Título</th>
+        <th>Modalidad</th>
+        </tr>
+      </thead>
+    <tbody>
+     <tr ng-repeat="t in titleTable | filter:query | filter: {state:statusOption}" >
+        <td> {{t.academicUnit}}</td>
+        <td> {{t.careerCode}} </td>
+        <td> {{t.careerName}} </td>
+        <td> {{t.titleCode}} </td>
+        <td> {{t.titleName}} </td>
+        <td> {{t.titleType}} </td>
+        <td> {{t.careerMode}} </td>
+      </tr>  
+    </tbody>
+  </table>
+</div>
+
+
+
+
+

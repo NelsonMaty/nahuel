@@ -11,7 +11,7 @@ angular.module('nahuel11App')
   .controller('MainCtrl', function ($scope) {
 
   	//hardcoded data, replace with a REST call
-    $scope.studyCenters = [
+    $scope.nelson = [
       {'id' : '1',
        'type':'Pública',
        'level':'Universidad',
@@ -109,7 +109,6 @@ angular.module('nahuel11App')
   	$scope.clearFilter = function () {
   		$scope.searched = null;
   		$scope.isCollapsed = true;
-  		
   	};
 
   	//study center selected from table
@@ -118,6 +117,16 @@ angular.module('nahuel11App')
   		$scope.selectedCenterId = idSelected;
   		$scope.btnState = ''
   	};
+
+    $scope.removeElement = function (idToBeRemoved) {
+      var i;
+      for (i = 0; i < $scope.studyCenters.length; ++i) {
+        if ($scope.studyCenters[i].id == idToBeRemoved){
+          $scope.studyCenters.splice(i,1);
+        }
+      }
+      
+    }
 
   	//button state
   	$scope.btnState = 'disabled';
