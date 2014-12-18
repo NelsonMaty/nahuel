@@ -2,11 +2,9 @@
 
 angular
   .module('nahuel11App', [
-    'ngAnimate',
-    'ngResource',
     'ngRoute',
     'ui.bootstrap',
-    'ng-context-menu'
+    'ng-context-menu',
   ])
   .config(function ($routeProvider) {
     $routeProvider
