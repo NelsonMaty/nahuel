@@ -8,8 +8,9 @@
  * Controller of the nahuel11App
  */
 angular.module('nahuel11App')
-   .controller('TitleCtrl', function ($scope) {
-      $scope.query = ""; //string used for filtering 
+.controller('TitleCtrl', ['$scope', 'dataFactory', function ($scope, dataFactory) {
+
+  $scope.query = ""; //string used for filtering purposes
 
   $scope.initTree = function(){
     $('#jstree_demo_div').jstree({
@@ -44,8 +45,8 @@ angular.module('nahuel11App')
         "data" : [
             {
                 id:"ajson0", parent : "#",
-                text : "Todos las carreras",
-                state : {opened : false},
+                text : "Todas las carreras",
+                state : {opened : true},
                 icon : "fa fa-th-list"
             },
             { 
@@ -111,71 +112,120 @@ angular.module('nahuel11App')
     });
   }
 
-    $scope.titleTable = [
-      { 'academicUnit': 'Facultad de Ciencias Médicas',
-        'careerCode': '00001',
-        'careerName':'Medicina',
-        'titleCode':'12',
-        'titleName': 'Médico',
-        'titleType': 'Tipo 1',
-        'careerMode': 'Presencial',
-        'state': '1'
-      },
-      { 'academicUnit': 'Escuela de Enfermería',
-        'careerCode': '00002',
-        'careerName':'Enfermería',
-        'titleCode':'15',
-        'titleName': 'Enfermero',
-        'titleType': 'Tipo 1',
-        'careerMode': 'Semi Presencial',
-        'state': '2'
-      },
-      { 'academicUnit': 'Facultad de Ciencias Médicas',
-        'careerCode': '00003',
-        'careerName':'Licenciatura en Fonoaudiología',
-        'titleCode':'11',
-        'titleName': 'Licenciado en Fonoaudiología',
-        'titleType': 'Tipo 2',
-        'careerMode': 'Presencial',
-        'state': '3'
-      },
-      { 'academicUnit': 'Facultad de Artes',
-        'careerCode': '00004',
-        'careerName':'Tecnicatura Universitaria en Fotografía',
-        'titleCode':'17',
-        'titleName': 'Tecnico Universitario en Fotografía',
-        'titleType': 'Tipo 3',
-        'careerMode': 'A distancia',
-        'state': '4'
-      },
-      { 'academicUnit': 'Facultad de Artes',
-        'careerCode': '00005',
-        'careerName':'Tecnicatura en Luthería',
-        'titleCode':'19',
-        'titleName': 'Maestro Técnico Profesional de Luthería',
-        'titleType': 'Tipo 1',
-        'careerMode': 'Presencial',
-      'state': '5'
-      },
-      { 'academicUnit': 'Facultad de Artes',
-        'careerCode': '00005',
-        'careerName':'Tecnicatura en Luthería',
-        'titleCode':'19',
-        'titleName': 'Técnico en Luthería',
-        'titleType': 'Tipo 1',
-        'careerMode': 'Presencial',
-      'state': '5'
-      }
-    ];
+  $scope.titleTable = [];
+  getTitles();
+  function getTitles() {
+    dataFactory.getTitles()
+      .success(function(data) {
+        $scope.titleTable = data;
+      })
+      .error(function (error){
+        console.log("Unable to load titles data." + error.message);
+      });
+  }
 
-    $scope.countStates = function(stateValue) {
-      var count = 0;
-      for (var i = 0; i < $scope.titleTable.length; i++) { 
-        if($scope.titleTable[i].state == stateValue){
-          count = count + 1;
-        }
+  $scope.countStates = function(stateValue) {
+    var count = 0;
+    for (var i = 0; i < $scope.titleTable.length; i++) { 
+      if($scope.titleTable[i].state == stateValue){
+        count = count + 1;
       }
-      return count;
     }
+    return count;
+  }
 
-  });
+  $scope.countCareers = function() {
+    return $scope.titleTable.length;
+  }
+
+  $scope.initSearchPanel = function() {
+    $("#flip").click(function(){
+      $("#panel").slideToggle();
+    });
+  }
+  
+  $scope.initClosePanelButton = function() {
+    $(".search-widget .close").click(function(){
+      $("#panel").slideToggle();
+    });
+  }
+
+  $scope.institution = "";
+  $scope.institutions = [];
+  getInstitutions();
+  function getInstitutions() {
+    dataFactory.getInstitutions()
+      .success(function(data) {
+        $scope.institutions = data;
+      })
+      .error(function (error){
+        console.log("Unable to load titles data." + error.message);
+      });
+  }
+
+  $scope.au = "";
+  $scope.aus = [];
+  getAcademicUnits();
+  function getAcademicUnits() {
+    dataFactory.getAcademicUnits()
+      .success(function(data) {
+        $scope.aus = data;
+      })
+      .error(function (error){
+        console.log("Unable to load titles data." + error.message);
+      });
+  }
+
+  $scope.ct = "";
+  $scope.cts = [];
+  getCareerTypes();
+  function getCareerTypes() {
+    dataFactory.getCareerTypes()
+      .success(function(data) {
+        $scope.cts = data;
+      })
+      .error(function (error){
+        console.log("Unable to load titles data." + error.message);
+      });
+  }
+
+  $scope.career = "";
+  $scope.careers = [];
+  getCareers();
+  function getCareers() {
+    dataFactory.getCareers()
+      .success(function(data) {
+        $scope.careers = data;
+      })
+      .error(function (error){
+        console.log("Unable to load titles data." + error.message);
+      });
+  }
+
+  $scope.titleType = "";
+  $scope.ttypes = [];
+  getTitleTypes();
+  function getTitleTypes() {
+    dataFactory.getTitleTypes()
+      .success(function(data) {
+        $scope.ttypes = data;
+      })
+      .error(function (error){
+        console.log("Unable to load titles data." + error.message);
+      });
+  }
+
+  $scope.resType= "";
+  $scope.resTypes = [];
+  getResolutionTypes();
+  function getResolutionTypes() {
+    dataFactory.getResolutionTypes()
+      .success(function(data) {
+        $scope.resTypes = data;
+      })
+      .error(function (error){
+        console.log("Unable to load titles data." + error.message);
+      });
+  }
+
+}]);

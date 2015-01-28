@@ -13,8 +13,6 @@ angular.module('nahuel11App')
   	//hardcoded data, replace with a REST call
     $scope.nelson = [
       {'id' : '1',
-       'type':'Pública',
-       'level':'Universidad',
   	   'acronym':'UNC',
   	   'name':'Universidad Nacional de Córdoba',
   	   'country':
@@ -23,8 +21,6 @@ angular.module('nahuel11App')
   		 }
   	  },
   	  {'id' : '2',
-  	   'type':'Privada',
-       'level':'Universidad',
   	   'acronym':'IUA',
   	   'name':'Instituto Universitario Aeronáutico',
   	   'country':
@@ -33,8 +29,6 @@ angular.module('nahuel11App')
   		 }
   	  },
   	  {'id' : '3',
-  	   'type':'Pública',
-       'level':'Colegio',
   	   'acronym':'CNM',
   	   'name':'Colegio Nacional de Monserrat',
   	   'country':
@@ -43,8 +37,6 @@ angular.module('nahuel11App')
   		 }
   	  },
   	  {'id' : '8',
-  	   'type':'Pública',
-       'level':'Universidad',
   	   'acronym':'UNIFESP',
   	   'name':'Universidad Federal de San Pablo',
   	   'country':
@@ -53,8 +45,6 @@ angular.module('nahuel11App')
   		 }
   	  },
   	  {'id' : '5',
-  	   'type':'Privada',
-       'level':'Universidad',
   	   'acronym':'UCC',
   	   'name':'Universidad Católica de Córdoba',
   	   'country':
@@ -63,8 +53,6 @@ angular.module('nahuel11App')
   		 }
   	  },
   	  {'id' : '6',
-  	   'type':'Privada',
-       'level':'Universidad',
   	   'acronym':'UP',
   	   'name':'Universidad de Palermo',
   	   'country':
@@ -73,8 +61,6 @@ angular.module('nahuel11App')
   		 }
   	  },
   	  {'id' : '7',
-  	   'type':'Pública',
-       'level':'Universidad',
   	   'acronym':'UBA',
   	   'name':'Universidad de Buenos Aires',
   	   'country':
@@ -83,8 +69,6 @@ angular.module('nahuel11App')
   		 }
   	  },
   	  {'id' : '4',
-  	   'type':'Privada',
-       'level':'Universidad',
   	   'acronym':'INSA',
   	   'name':'Institut National des Sciences Apliquées',
   	   'country':
