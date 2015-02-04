@@ -114,7 +114,6 @@
                   <div class="col-sm-6">
                      <div class="modal-subtitle">Instituciones Participantes:</div>
                      <div class="institutions-content">
-                        
                      </div>
                   </div>
                   <div class="col-sm-6">
@@ -140,8 +139,7 @@
    <div class="col-md-3">
       <input type="text" placeholder="Buscar" ng-model="query" class="search-box" 
          style="height: 32px; padding-left: 5px; width: 89%; float:left;" />
-      <i 
-         class="fa fa-search search-button"
+      <i class="fa fa-search search-button"
          tooltip="Búsqueda avanzada"
          tooltip-placement="right"
          tooltip-popup-delay='1000'
@@ -151,7 +149,6 @@
 
    <!-- Advanced search panel -->
    <div id="panel" style="display:none" class="col-md-5">
-      
       <!-- Panel title label -->
       <span class="title">
          <span class="glyphicon glyphicon-search" style="font-size:9pt"></span>
@@ -169,7 +166,7 @@
          <div class="form-group form-group-sm">
             <label for="A" class="col-sm-3 control-label">Institución:</label>
             <div class="col-sm-8">
-               <input class="form-control input-sm" id="A" ng-model="institution" typeahead="i.institutionName for i in institutions | filter:$viewValue | limitTo:8">
+               <input class="form-control input-sm" id="A" ng-model="institution" typeahead="i.institutionName for i in institutions | filter:$viewValue | limitTo:8" >
             </div>
          </div>
          <div class="form-group form-group-sm">
@@ -208,10 +205,10 @@
                <input class="form-control input-sm" id="G" ng-model="resType" typeahead="rt.resolutionTypeName for rt in resTypes | filter:$viewValue | limitTo:8">
             </div>
             <div class="col-sm-2" style="padding-left:0">
-               <input class="form-control input-sm" id="G" placeholder="Número">
+               <input class="form-control input-sm" id="G" placeholder="Número" ng-model="resNro">
             </div>
             <div class="col-sm-2" style="padding-left:0">
-               <input class="form-control input-sm" id="G" placeholder="Año">
+               <input class="form-control input-sm" id="G" placeholder="Año" ng-model="resYear">
             </div>
          </div>
          <div class="form-group">
@@ -219,17 +216,17 @@
             <div class="col-sm-8">
                <div class="checkbox-inline">
                  <label>
-                   <input type="checkbox"> Pendiente
+                   <input type="checkbox" ng-model="titleStateSearch['1']" > Pendiente
                  </label>
                </div>
                <div class="checkbox-inline">
                  <label>
-                   <input type="checkbox"> Pendiente con código ONA
+                   <input type="checkbox" ng-model="titleStateSearch['6']"> Pendiente con código ONA
                  </label>
                </div>
                <div class="checkbox-inline">
                  <label>
-                   <input type="checkbox"> Vigente
+                   <input type="checkbox" ng-model="titleStateSearch['3']"> Vigente
                  </label>
                </div>
              </div>
@@ -238,20 +235,22 @@
              <div class="col-sm-offset-3 col-sm-8">
                <div class="checkbox-inline">
                  <label>
-                   <input type="checkbox"> No Vigente con Actividad
+                   <input type="checkbox" ng-model="titleStateSearch['5']"> No Vigente con Actividad
                  </label>
                </div>
                <div class="checkbox-inline">
                  <label>
-                   <input type="checkbox"> No Vigente sin Actividad
+                   <input type="checkbox" ng-model="titleStateSearch['4']"> No Vigente sin Actividad
                  </label>
                </div>
              </div>
          </div>
          <div class="form-group">
             <div class="col-sm-offset-3 col-sm-8">
-              <button type="button" class="btn btn-info btn-sm pull-right" style="padding: 7px 28px;">
-                <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar
+              <button type="button" ng-click="searchTitles()"
+                class="btn btn-info btn-sm pull-right" style="padding: 7px 28px;">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 
+                  Buscar
               </button>
             </div>
          </div>
@@ -268,35 +267,35 @@
       <div class="radio-inline">
          <input type="radio" name="searchOptions" id="inlineRadio1" value="1" ng-model="statusOption"> <small>Títulos Pendientes</small>
       </div>
-         <span class="badge">{{countStates(1)}}</span>
+         <span class="badge">{{countState(1)}}</span>
    </div>
 
    <div class="radio-button-width"> 
       <div class="radio-inline">
          <input type="radio" name="searchOptions" id="inlineRadio2" value="5" ng-model="statusOption"> <small>Títulos No Vigentes con Actividad</small>
    </div>
-      <span class="badge">{{countStates(5)}}</span>
+      <span class="badge">{{countState(5)}}</span>
    </div>
 
    <div class="radio-button-width"> 
       <div class="radio-inline">
          <input type="radio" name="searchOptions" id="inlineRadio3" value="3" ng-model="statusOption"> <small>Títulos Vigentes</small>
       </div>
-      <span class="badge">{{countStates(3)}}</span>
+      <span class="badge">{{countState(3)}}</span>
    </div>
    <div class="radio-button-width"> 
       <div class="radio-inline">
          <input type="radio" name="searchOptions" id="inlineRadio4" value="6" ng-model="statusOption"> 
             <small>Títulos Pendientes con Código ONA</small>
       </div>
-      <span class="badge">{{countStates(6)}}</span>
+      <span class="badge">{{countState(6)}}</span>
    </div>
    <div class="radio-button-width"> 
      <div class="radio-inline">
         <input type="radio" name="searchOptions" id="inlineRadio5" value="4" ng-model="statusOption"> 
           <small>Títulos No Vigentes sin Actividad</small>
      </div>
-     <span class="badge">{{countStates(4)}}</span>
+     <span class="badge">{{countState(4)}}</span>
    </div>
    <div class="radio-button-width"> 
      <div class="radio-inline">
@@ -307,41 +306,42 @@
    </div>
 </div>
 
-<!-- TITLE TREE -->
-<div class="col-md-2 ui-layout-west" id="jstree_demo_div" ng-init="initTree()" style="margin-top: 10px; overflow: hidden; font-size:10pt">
-</div>
-
-<!-- TABLE -->
-<div class="datagrid col-md-10">
-   <table >
-      <col style="width:20%">
-      <col style="width:8%">
-      <col style="width:22%">
-      <col style="width:8%">
-      <col style="width:22%">
-      <col style="width:8%">
-      <col style="width:12%"> 
-      <thead >
-         <tr>
-            <th>Unidad Académica</th>
-            <th>Código de Carrera</th>
-            <th>Nombre de Carrera</th>
-            <th>Código de Título</th>
-            <th>Nombre de Título</th>
-            <th>Tipo de Título</th>
-            <th>Modalidad</th>
-         </tr>
-      </thead>
-      <tbody>
-      <tr ng-repeat="t in titleTable | filter:query | filter: {state:statusOption}" style="height:47px">
-            <td> {{t.academicUnit}}</td>
-            <td> {{t.careerCode}} </td>
-            <td> {{t.careerName}} </td>
-            <td> {{t.titleCode}} </td>
-            <td> {{t.titleName}} </td>
-            <td> {{t.titleType}} </td>
-            <td> {{t.careerMode}} </td>
-         </tr>  
-      </tbody>
-   </table>
+<div id="mySplitter">
+  <!-- TITLE TREE -->
+  <div class="col-md-2" id="jstree_demo_div" ng-init="initTree()" style="margin-top: 10px; overflow: hidden; font-size:10pt; padding-left: 0px;">
+  </div>
+  <!-- TABLE -->
+  <div class="datagrid col-md-10" >
+     <table >
+        <col style="width:20%">
+        <col style="width:8%">
+        <col style="width:22%">
+        <col style="width:8%">
+        <col style="width:22%">
+        <col style="width:8%">
+        <col style="width:12%"> 
+        <thead >
+           <tr>
+              <th>Unidad Académica</th>
+              <th>Código de Carrera</th>
+              <th>Nombre de Carrera</th>
+              <th>Código de Título</th>
+              <th>Nombre de Título</th>
+              <th>Tipo de Título</th>
+              <th>Modalidad</th>
+           </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="t in titleTable | filter:query | filter: {state:statusOption}" style="height:47px">
+              <td> {{t.academicUnit}}</td>
+              <td> {{t.careerCode}} </td>
+              <td> {{t.careerName}} </td>
+              <td> {{t.titleCode}} </td>
+              <td> {{t.titleName}} </td>
+              <td> {{t.titleType}} </td>
+              <td> {{t.careerMode}} </td>
+           </tr>  
+        </tbody>
+     </table>
+  </div>
 </div>

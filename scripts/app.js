@@ -1,5 +1,6 @@
 'use strict';
 
+var nahuel11App = 
 angular
   .module('nahuel11App', [
     'ngRoute',
@@ -26,8 +27,9 @@ angular
     var dataFactory = {};
 
     //get all titles
-    dataFactory.getTitles = function (){
-      return $http.get(urlBase + 'titles');
+    dataFactory.getTitles = function (searchFilters){
+      searchFilters = searchFilters || {}; // Null parameter case
+      return $http.get(urlBase + 'titles', {params:searchFilters});
     };
 
     //get institutions
@@ -43,7 +45,7 @@ angular
     //get all career types
     dataFactory.getCareerTypes = function (){
       return $http.get(urlBase + 'careerTypes');
-    };
+    };// array of filters filled by the user (it could potentially be empty
 
     //get all title types
     dataFactory.getTitleTypes = function (){
@@ -59,28 +61,6 @@ angular
     dataFactory.getResolutionTypes = function (){
       return $http.get(urlBase + 'resolutionTypes');
     };
-
-/*
-    //get a single title
-    dataFactory.getTitle = function (id){
-      return $http.get(urlBase + '/' + id);
-    };
-
-    //insert a new title
-    dataFactory.insertTitles = function (title){
-      return $http.post(urlBase, title);
-    };
-
-    //update an existent title
-    dataFactory.updateTitle = function (title){
-      return $http.put(urlBase + '/' + title.id, title);
-    };
-
-    //delete a given title
-    dataFactory.deleteTitle = function (id){
-      return $http.delete(urlBase + '/' + id);
-    };
-*/
 
     return dataFactory;
   }]

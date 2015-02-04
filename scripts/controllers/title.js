@@ -112,19 +112,7 @@ angular.module('nahuel11App')
     });
   }
 
-  $scope.titleTable = [];
-  getTitles();
-  function getTitles() {
-    dataFactory.getTitles()
-      .success(function(data) {
-        $scope.titleTable = data;
-      })
-      .error(function (error){
-        console.log("Unable to load titles data." + error.message);
-      });
-  }
-
-  $scope.countStates = function(stateValue) {
+  $scope.countState = function(stateValue) {
     var count = 0;
     for (var i = 0; i < $scope.titleTable.length; i++) { 
       if($scope.titleTable[i].state == stateValue){
@@ -140,14 +128,29 @@ angular.module('nahuel11App')
 
   $scope.initSearchPanel = function() {
     $("#flip").click(function(){
-      $("#panel").slideToggle();
+      $("#panel").slideToggle(300);
     });
   }
   
   $scope.initClosePanelButton = function() {
     $(".search-widget .close").click(function(){
-      $("#panel").slideToggle();
+      $("#panel").slideToggle(300);
     });
+  }
+
+/**********************************
+ *     Web services functions     *
+ **********************************/
+  $scope.titleTable = [];
+  getTitles();
+  function getTitles() {
+    dataFactory.getTitles()
+      .success(function(data) {
+        $scope.titleTable = data;
+      })
+      .error(function (error){
+        console.log("Unable to load titles data." + error.message);
+      });
   }
 
   $scope.institution = "";
@@ -223,6 +226,41 @@ angular.module('nahuel11App')
       .success(function(data) {
         $scope.resTypes = data;
       })
+      .error(function (error){
+        console.log("Unable to load titles data." + error.message);
+      });
+  }
+
+  $scope.titleStateSearch = {1:false,3:true,4:false,5:false,6:false,};
+
+  $scope.searchTitles = function () {
+    $("#panel").slideToggle(300); // Hide the search panel
+
+    var searchFilters = {};
+    if(!!$scope.institution)
+      searchFilters.institution = $scope.institution;
+    if(!!$scope.au)
+      searchFilters.academicUnit = $scope.au;
+    if(!!$scope.ct)
+      searchFilters.careerType = $scope.ct;
+    if(!!$scope.career)
+      searchFilters.career = $scope.career;
+    if(!!$scope.titleType)
+      searchFilters.titleType = $scope.titleType;
+    if(!!$scope.title)
+      searchFilters.title = $scope.title;
+    if(!!$scope.resType)
+      searchFilters.resolutionType = $scope.resType;
+    if(!!$scope.resNro)
+      searchFilters.resolutionNumber = $scope.resNro;
+    if(!!$scope.resYear)
+      searchFilters.resolutionYear = $scope.resYear;
+    searchFilters.titleStates = $scope.titleStateSearch;
+
+    dataFactory.getTitles(searchFilters)
+    .success(function(data) {
+      $scope.titleTable = data;
+    })
       .error(function (error){
         console.log("Unable to load titles data." + error.message);
       });

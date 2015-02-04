@@ -20,6 +20,7 @@
 	text-align: left; 
 	width: 100%; 
 	margin-top: 10px;
+
 } 
 
 .datagrid {
@@ -178,4 +179,19 @@
 
 .no-padding-left{
 	padding-left: 0;
+}
+
+/* splitter */
+
+#mySplitter {
+	height: 100%;
+	width: 100%;
+	padding-top: 72px;  /* not sure why? */
+}
+#mySplitter div {
+	overflow: auto;
+}
+.vsplitbar {
+	width: 5px;
+	background: #aaa;
 }
