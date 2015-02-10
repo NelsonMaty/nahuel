@@ -66,16 +66,13 @@ angular.module('nahuel11App')
   }
 
   $scope.buildSubtreeArray = function (node){
-    console.log(node.children.length);
+    $scope.auSelectedSubtree.push(node.text);
+    if (node.children.length == 0)
+      return;
     node.children.forEach(function(entry){
-      console.log($('#jstree_demo_div').jstree(true).get_node('#'+entry+'').text);
-      //$('#jstree_demo_div').jstree(true).get_node('#'+entry+'').text
+      $scope.buildSubtreeArray(
+        $('#jstree_demo_div').jstree(true).get_node('#'+entry+''));
     });
-    /*node.children.forEach(
-      function(child_id) {
-        console.log($('#' + child_id ));
-      }
-    );*/
   };
 
   $scope.initTree = function(){
@@ -124,6 +121,7 @@ angular.module('nahuel11App')
       $scope.$apply(function(){
         if (data.node.parent != "#"){
           $scope.auSelected = data.node.text;
+          $scope.auSelectedSubtree = [];
           $scope.buildSubtreeArray(data.node);
         }
         else{
@@ -292,7 +290,13 @@ angular.module('nahuel11App')
     return function(item) {
       if ($scope.auSelected == "")
         return true; // No academic unit selected
-      return false;
+      var index = $scope.auSelectedSubtree.indexOf(item.academicUnit);
+      if (index == -1){
+        index = $scope.auSelectedSubtree.indexOf(item.careerName);
+        if (index == -1)
+          return false;
+      }
+      return true;
     }
   };
 
