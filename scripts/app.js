@@ -2,6 +2,8 @@
 
 var nahuel11App = 
 angular
+
+  //url navigation
   .module('nahuel11App', [
     'ngRoute',
     'ui.bootstrap',
@@ -21,15 +23,17 @@ angular
         redirectTo: '/'
       });
   })
-  .factory('dataFactory', ['$http', function($http){
+
+  // backend connection and methods
+  .factory('dataFactory', ['$http', function($http){ 
     
-    var urlBase = 'http://localhost:8080/api/';
+    var urlBase = 'http://localhost:8080/api/'; //TODO: replace it for the actual url
     var dataFactory = {};
 
     //get all titles
     dataFactory.getTitles = function (searchFilters){
       searchFilters = searchFilters || {}; // Null parameter case
-      return $http.get(urlBase + 'titles', {params:searchFilters});
+      return $http.get(urlBase + 'titles', {params:searchFilters}); 
     };
 
     //get institutions
@@ -45,7 +49,7 @@ angular
     //get all career types
     dataFactory.getCareerTypes = function (){
       return $http.get(urlBase + 'careerTypes');
-    };// array of filters filled by the user (it could potentially be empty
+    };
 
     //get all title types
     dataFactory.getTitleTypes = function (){
@@ -62,6 +66,7 @@ angular
       return $http.get(urlBase + 'resolutionTypes');
     };
 
+    //get all academic units in a tree format
     dataFactory.getAcademicUnitsHierarchy = function (){
       return $http.get(urlBase + 'academicUnitsHierarchy');
     };
