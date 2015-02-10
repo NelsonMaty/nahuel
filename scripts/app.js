@@ -62,6 +62,10 @@ angular
       return $http.get(urlBase + 'resolutionTypes');
     };
 
+    dataFactory.getAcademicUnitsHierarchy = function (){
+      return $http.get(urlBase + 'academicUnitsHierarchy');
+    };
+
     return dataFactory;
   }]
   );

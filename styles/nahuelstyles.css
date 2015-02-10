@@ -2,14 +2,18 @@
 .title {
 	padding-bottom: 10px;
 }
-
+body{
+	padding-bottom: 0px;
+	overflow: hidden;
+}
 /* Search radio button style */
 .radio-button-width {
 	display: inline-block;
 	width: 250px;
 	vertical-align: text-top;
 	font-weight: bold;
-} 
+}
+
 .badge{
 	background-color: #EBBE6E;
 }
@@ -19,9 +23,7 @@
 	border-collapse: collapse; 
 	text-align: left; 
 	width: 100%; 
-	margin-top: 10px;
-
-} 
+}
 
 .datagrid {
 	font: normal 12px/150% Verdana, Arial, Helvetica, sans-serif; 
@@ -179,19 +181,4 @@
 
 .no-padding-left{
 	padding-left: 0;
-}
-
-/* splitter */
-
-#mySplitter {
-	height: 100%;
-	width: 100%;
-	padding-top: 72px;  /* not sure why? */
-}
-#mySplitter div {
-	overflow: auto;
-}
-.vsplitbar {
-	width: 5px;
-	background: #aaa;
 }

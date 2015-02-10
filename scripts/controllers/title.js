@@ -10,7 +10,73 @@
 angular.module('nahuel11App')
 .controller('TitleCtrl', ['$scope', 'dataFactory', function ($scope, dataFactory) {
 
+  $scope.auSelectedSubtree = [];
+
+  $scope.initSplitter = function(){
+    $('#mainSplitter').jqxSplitter({ width: "100%", height: "87.5%", panels: [{ size: 310 }]});
+  }
+
+  $scope.traverseNode = function(node){
+    //renaming the "name" key
+    node["text"] = node.name;
+    delete node.name;
+
+    //adding icon to the node
+    node["icon"] = "fa fa-university";
+
+    //1st base case, node with no children attr
+    if (!!!node.children){
+      //setting the career icon
+      node["icon"] = "fa fa-graduation-cap";
+      return;
+    }
+
+    //2nd base case, academic unit with no children
+    if (node.children.length == 0)
+      return;
+
+    node.children.forEach(
+      function(child){
+        $scope.traverseNode(child);
+      });
+  }
+
+  $scope.jsTreeFormatter = function(tree){
+    tree.forEach(
+      function(node){
+        $scope.traverseNode(node);
+      });
+    return;
+  }
+
   $scope.query = ""; //string used for filtering purposes
+  $scope.auSelected = "";
+  $scope.hierarchy= [];
+  getAcademicUnitsHierarchy();
+  function getAcademicUnitsHierarchy() {
+    dataFactory.getAcademicUnitsHierarchy()
+      .success(function(data) {
+        $scope.hierarchy = data;
+        $scope.jsTreeFormatter($scope.hierarchy);
+        $scope.initTree();
+      })
+      .error(function (error){
+        console.log("Unable to load titles data." + error.message);
+      });
+  }
+
+  $scope.buildSubtreeArray = function (node){
+    console.log(node.children.length);
+    node.children.forEach(function(entry){
+      console.log($('#jstree_demo_div').jstree(true).get_node('#'+entry+'').text);
+      //$('#jstree_demo_div').jstree(true).get_node('#'+entry+'').text
+    });
+    /*node.children.forEach(
+      function(child_id) {
+        console.log($('#' + child_id ));
+      }
+    );*/
+  };
 
   $scope.initTree = function(){
     $('#jstree_demo_div').jstree({
@@ -43,71 +109,27 @@ angular.module('nahuel11App')
         "multiple" : false, // multiple nodes selection not allowed.
         "check_callback": true,
         "data" : [
-            {
-                id:"ajson0", parent : "#",
-                text : "Todas las carreras",
-                state : {opened : true},
-                icon : "fa fa-th-list"
-            },
-            { 
-              id : "ajson1", parent : "ajson0",
-              text : "Facultad de Ciencias Médicas",
-              state : {opened : false},
-              icon : "fa fa-university"
-            },
-
-            { 
-              id : "ajson2", parent : "ajson1",
-              text : "Escuela de Enfermería",
-              state : {opened : false},
-              icon : "fa fa-university"
-            },
-
-            { 
-              id : "ajson3", parent : "ajson2",
-              text : "Enfermería",
-              state : {opened : false},
-              icon : "fa fa-graduation-cap"
-            },
-
-            { 
-              id : "ajson8", parent : "ajson1",
-              text : "Medicina",
-              state : {opened : false},
-              icon : "fa fa-graduation-cap"
-            },
-
-            { 
-              id : "ajson9", parent : "ajson1",
-              text : "Licenciatura en Fonoaudiología",
-              state : {opened : false},
-              icon : "fa fa-graduation-cap"
-            },
-
-            { 
-              id : "ajson6", parent : "ajson0",
-              text : "Facultad de Artes",
-              state : {opened : false},
-              icon : "fa fa-university"
-            },
-
-            { 
-              id : "ajson10", parent : "ajson6",
-              text : "Tecnicatura en Luthería",
-              state : {opened : false},
-              icon : "fa fa-graduation-cap"
-            },
-         ]
+          {
+            text : "Todas las carreras",
+            state : {opened : true},
+            icon : "fa fa-th-list",
+            children:$scope.hierarchy
+          }
+        ]
       }
     });
 
    // Click listener
     $('#jstree_demo_div').on("changed.jstree", function (e, data) {
       $scope.$apply(function(){
-        if (data.node.parent != "#")
-          $scope.query = data.node.text;
-        else
-          $scope.query = "";
+        if (data.node.parent != "#"){
+          $scope.auSelected = data.node.text;
+          $scope.buildSubtreeArray(data.node);
+        }
+        else{
+          $scope.auSelectedSubtree = [];
+          $scope.auSelected = "";
+        }
       });
     });
   }
@@ -265,5 +287,13 @@ angular.module('nahuel11App')
         console.log("Unable to load titles data." + error.message);
       });
   }
+
+  $scope.criteriaMatch = function() {
+    return function(item) {
+      if ($scope.auSelected == "")
+        return true; // No academic unit selected
+      return false;
+    }
+  };
 
 }]);
