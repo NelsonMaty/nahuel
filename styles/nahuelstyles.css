@@ -182,3 +182,7 @@ body{
 .no-padding-left{
 	padding-left: 0;
 }
+
+.be-careful:hover{
+	background-color: #E39169;
+}

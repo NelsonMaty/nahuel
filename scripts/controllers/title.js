@@ -27,11 +27,9 @@ angular.module('nahuel11App')
     return function(item) {
       if ($scope.auSelected == "")
         return true; // No academic unit selected
-      var index = $scope.auSelectedSubtree.indexOf(item.academicUnit);
+      var index = $scope.auSelectedSubtree.indexOf(item.careerName);
       if (index == -1){
-        index = $scope.auSelectedSubtree.indexOf(item.careerName);
-        if (index == -1)
-          return false;
+        return false;
       }
       return true;
     }
@@ -106,12 +104,13 @@ angular.module('nahuel11App')
     return;
   }
 
-  // builds an array of au, including the selected node
-  // and all of its children
+  // builds an array of titles (leaves)
   $scope.buildSubtreeArray = function (node){
-    $scope.auSelectedSubtree.push(node.text);
-    if (node.children.length == 0)
+    //base case: leaf node
+    if (node.children.length == 0){ 
+      $scope.auSelectedSubtree.push(node.text); 
       return;
+    }
     node.children.forEach(function(entry){
       $scope.buildSubtreeArray(
         $('#jstree_demo_div').jstree(true).get_node('#'+entry+''));
@@ -277,6 +276,27 @@ angular.module('nahuel11App')
       });
   }
 
+  $scope.cleanSearchFields = function () {
+    $scope.query = ""; 
+    $scope.institution = "";
+    $scope.au = "";
+    $scope.ct = "";
+    $scope.career = "";
+    $scope.titleType = "";
+    $scope.title = "";
+    $scope.resType= "";
+    $scope.resNro = "";
+    $scope.resYear = "";
+    $scope.titleStateSearch = {1:false,3:true,4:false,5:false,6:false,};
+    dataFactory.getTitles()
+    .success(function(data) {
+      $scope.titleTable = data;
+    })
+    .error(function (error){
+      console.log("Unable to load titles data." + error.message);
+    });
+  }
+
   $scope.searchTitles = function () {
     $("#panel").slideToggle(300); // Hide the search panel
 
@@ -305,9 +325,9 @@ angular.module('nahuel11App')
     .success(function(data) {
       $scope.titleTable = data;
     })
-      .error(function (error){
-        console.log("Unable to load titles data." + error.message);
-      });
+    .error(function (error){
+      console.log("Unable to load titles data." + error.message);
+    });
   }
 
 }]);
