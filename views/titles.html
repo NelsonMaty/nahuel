@@ -9,13 +9,13 @@
 <!-- CREATE BUTTON -->
 <div class="col-md-2" style="text-align: center;">
    <button type="button" class="btn btn-success" style="padding: 7px 15px;border-radius: 0;" 
-      data-toggle="modal" data-target="#createModal"> 
-      Dar de alta un título 
+      data-toggle="modal" data-target="#creationModal"> 
+      Solicitar alta de un título 
    </button>
 </div>
 
 <!-- CREATION MODAL -->
-<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="creationModal" tabindex="-1" role="dialog" aria-hidden="true">
    <div class="modal-dialog modal-lg">
       <div class="modal-content">
          <div class="modal-header">
@@ -131,6 +131,85 @@
          </div>
       </div>
    </div>
+</div>
+
+<!-- EDITION MODAL -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <span class="modal-title" id="myModalLabel" style="font-weight: bold;">Edición de Título</span>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="titleCodeInput" class="col-sm-2 control-label">Código</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="titleCodeInput" ng-model="titleSelected.titleCode">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="titleNameInput" class="col-sm-2 control-label">Título</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="titleNameInput" ng-model="titleSelected.titleName">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="femaleNameInput" class="col-sm-2 control-label">Título Femenino</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="femaleNameInput" ng-model="titleSelected.titleFemaleName">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="titleTypeCB" class="col-sm-2 control-label">Tipo de título</label>
+            <div class="col-sm-10">
+              <select class="selectpicker show-tick form-control" name="selectTitleType" >
+                <option ng-repeat="type in ttypes">{{type.titleTypeName}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="titleModeCB" class="col-sm-2 control-label">Modalidad</label>
+            <div class="col-sm-10">
+              <select class="selectpicker show-tick form-control" name="selectTitleMode" >
+                <option>Presencial</option>
+                <option>A Distancia</option>
+              </select> 
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="titleStateCB" class="col-sm-2 control-label">Estado actual</label>
+            <div class="col-sm-10" id="titleStateCB">
+              <select class="selectpicker form-control" name="selectTitleState">
+              <optgroup label="Título Pendiente">
+                <option value="1">Sin Código ONA</option>
+                <option value="6">Con Código ONA</option>
+              </optgroup>
+              <optgroup label="Vigente">
+                <option value="3">Título Vigente</option>
+              </optgroup>
+              <optgroup label="Título No Vigente">
+                <option value="5">Con Actividad</option>
+                <option value="4">Sin Actividad</option>
+              </optgroup>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="titleComment" class="col-sm-2 control-label">Comentario</label>
+            <div class="col-sm-10">
+              <textarea rows="2" class="form-control" id="titleComment" ng-model="titleSelected.titleComment" style="resize:vertical"></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- SEARCH WIDGET -->
@@ -311,7 +390,7 @@
    </div>
 </div>
 
-<div id="mainSplitter" style="border:0">
+<div id="mainSplitter" style="border:0; clear:both">
   <!-- TITLE TREE -->
   <div class="splitter-panel col-md-2" id="jstree_demo_div" style="overflow: auto; font-size:10pt; padding-left: 0px;font-size: 11px;">
   </div>
@@ -337,7 +416,7 @@
            </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="t in titleTable | filter:query | filter: {state:statusOption} | filter: criteriaMatch()" style="height:47px">
+        <tr ng-repeat="t in titleTable | filter:query | filter: {state:statusOption} | filter: criteriaMatch()" style="height:47px" ng-click="openEditModal(t)">
               <td> {{t.academicUnit}}</td>
               <td> {{t.careerCode}} </td>
               <td> {{t.careerName}} </td>
@@ -350,3 +429,4 @@
      </table>
   </div>
 </div>
+

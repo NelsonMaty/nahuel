@@ -38,7 +38,7 @@ body{
 	font-weight: bold; 
 	text-align: center;
 	padding: 3px;
-} 
+}
 
 .datagrid table thead th:first-child { 
 	border: none; 
@@ -54,6 +54,10 @@ body{
 
 .datagrid table tbody td:first-child { 
 	border-left: none; 
+}
+
+.datagrid table tr:hover {
+	background-color:#FFF0D0;
 }
 
 /*.datagrid table tbody tr:last-child td { 

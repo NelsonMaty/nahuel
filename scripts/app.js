@@ -2,7 +2,6 @@
 
 var nahuel11App = 
 angular
-
   //url navigation
   .module('nahuel11App', [
     'ngRoute',
@@ -26,7 +25,6 @@ angular
 
   // backend connection and methods
   .factory('dataFactory', ['$http', function($http){ 
-    
     var urlBase = 'http://172.16.248.229:8080/api/'; //TODO: replace it for the actual url
     var dataFactory = {};
 

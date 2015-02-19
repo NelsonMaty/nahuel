@@ -21,6 +21,16 @@ angular.module('nahuel11App')
   $scope.titleType = "";
   $scope.resType= "";
   $scope.titleStateSearch = {1:false,3:true,4:false,5:false,6:false,};
+  $scope.titleSelected = {};
+
+  $scope.openEditModal =function(title){
+    $.extend(true, $scope.titleSelected, title); // creating a 'working copy'
+    $('select[name=selectTitleState]').val(title.state); // selecting title state
+    $('select[name=selectTitleMode]').val(title.careerMode); // selecting title mode
+    $('select[name=selectTitleType]').val(title.titleType);// selecting title type
+    $('.selectpicker').selectpicker('refresh'); //refreshing (visually) the selectpickers
+    $('#editModal').modal('show');
+  }
 
   // Table filter by node selection
   $scope.criteriaMatch = function() {
