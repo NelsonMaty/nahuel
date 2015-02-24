@@ -1,4 +1,4 @@
-
+<div id="titlePage">
 <!-- PAGE TITLE -->
 <div class="col-md-10 col-md-offset-2 title">
    <strong>
@@ -135,7 +135,7 @@
 
 <!-- EDITION MODAL -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -144,61 +144,61 @@
       <div class="modal-body">
         <form class="form-horizontal">
           <div class="form-group">
-            <label for="titleCodeInput" class="col-sm-2 control-label">Código</label>
-            <div class="col-sm-10">
+            <label for="titleCodeInput" class="col-sm-2 control-label">Código ONA</label>
+            <div class="col-sm-2">
               <input type="text" class="form-control" id="titleCodeInput" ng-model="titleSelected.titleCode">
             </div>
           </div>
           <div class="form-group">
             <label for="titleNameInput" class="col-sm-2 control-label">Título</label>
-            <div class="col-sm-10">
+            <div class="col-sm-9">
               <input type="text" class="form-control" id="titleNameInput" ng-model="titleSelected.titleName">
             </div>
           </div>
           <div class="form-group">
             <label for="femaleNameInput" class="col-sm-2 control-label">Título Femenino</label>
-            <div class="col-sm-10">
+            <div class="col-sm-9">
               <input type="text" class="form-control" id="femaleNameInput" ng-model="titleSelected.titleFemaleName">
             </div>
           </div>
           <div class="form-group">
+            <label for="titleStateCB" class="col-sm-2 control-label">Estado actual</label>
+            <div class="col-sm-6" id="titleStateCB">
+              <select class="selectpicker form-control" name="selectTitleState">
+              <optgroup label="Título Pendiente">
+                <option value="1" title="Título Pendiente Sin Código ONA">Sin Código ONA</option>
+                <option value="6" title="Título Pendiente Con Código ONA">Con Código ONA</option>
+              </optgroup>
+              <optgroup label="Vigente">
+                <option value="3" title="Título Vigente">Título Vigente</option>
+              </optgroup>
+              <optgroup label="Título No Vigente">
+                <option value="5" title="Título No Vigente Con Actividad">Con Actividad</option>
+                <option value="4" title="Título No Vigente Sin Actividad">Sin Actividad</option>
+              </optgroup>
+              </select>
+            </div>
+            
+          </div>
+          <div class="form-group">
             <label for="titleTypeCB" class="col-sm-2 control-label">Tipo de título</label>
-            <div class="col-sm-10">
+            <div class="col-sm-3">
               <select class="selectpicker show-tick form-control" name="selectTitleType" >
                 <option ng-repeat="type in ttypes">{{type.titleTypeName}}</option>
               </select>
             </div>
-          </div>
-          <div class="form-group">
-            <label for="titleModeCB" class="col-sm-2 control-label">Modalidad</label>
-            <div class="col-sm-10">
+            <label for="titleModeCB" class="col-sm-1 control-label">Modalidad</label>
+            <div class="col-sm-2">
               <select class="selectpicker show-tick form-control" name="selectTitleMode" >
                 <option>Presencial</option>
                 <option>A Distancia</option>
-              </select> 
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="titleStateCB" class="col-sm-2 control-label">Estado actual</label>
-            <div class="col-sm-10" id="titleStateCB">
-              <select class="selectpicker form-control" name="selectTitleState">
-              <optgroup label="Título Pendiente">
-                <option value="1">Sin Código ONA</option>
-                <option value="6">Con Código ONA</option>
-              </optgroup>
-              <optgroup label="Vigente">
-                <option value="3">Título Vigente</option>
-              </optgroup>
-              <optgroup label="Título No Vigente">
-                <option value="5">Con Actividad</option>
-                <option value="4">Sin Actividad</option>
-              </optgroup>
               </select>
             </div>
           </div>
+
           <div class="form-group">
             <label for="titleComment" class="col-sm-2 control-label">Comentario</label>
-            <div class="col-sm-10">
+            <div class="col-sm-9">
               <textarea rows="2" class="form-control" id="titleComment" ng-model="titleSelected.titleComment" style="resize:vertical"></textarea>
             </div>
           </div>
@@ -216,7 +216,7 @@
 <div class="search-widget">
    <!-- Input search text -->
    <div class="col-md-3">
-      <input type="text" placeholder="Buscar" ng-model="query" class="search-box" 
+      <input type="text" placeholder="Búsqueda rápida" ng-model="query" class="search-box" 
          style="height: 32px; padding-left: 5px; width: 89%; float:left;" />
       <i class="fa fa-search search-button"
          tooltip="Búsqueda avanzada"
@@ -281,7 +281,9 @@
          <div class="form-group form-group-sm">
             <label for="G" class="col-sm-3 control-label">Tipo de Resolución:</label>
             <div class="col-sm-4">
-               <input class="form-control input-sm" id="G" ng-model="resType" typeahead="rt.resolutionTypeName for rt in resTypes | filter:$viewValue | limitTo:8">
+              <select class="form-control" ng-model="resType" ng-options="rt.resolutionTypeName for rt in resTypes">
+                <option></option> <!--empty value option -->
+              </select>
             </div>
             <div class="col-sm-2" style="padding-left:0">
                <input class="form-control input-sm" id="G" placeholder="Número" ng-model="resNro">
@@ -340,7 +342,7 @@
          </div>
       </form>
       <!-- END: Search form -->
-   </div> 
+   </div>
    <!-- END: Advanced search panel -->
 </div>
 <!-- END: SEARCH WIDGET -->
@@ -413,20 +415,29 @@
               <th>Nombre de Título</th>
               <th>Tipo de Título</th>
               <th>Modalidad</th>
+              <th> </th>
            </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="t in titleTable | filter:query | filter: {state:statusOption} | filter: criteriaMatch()" style="height:47px" ng-click="openEditModal(t)">
-              <td> {{t.academicUnit}}</td>
+        <tr ng-repeat="t in titleTable | filter:query | filter: {state:statusOption} | filter: criteriaMatch()" 
+          style="height:47px" ng-click="openEditModal(t)">
+              <td> {{t.academicUnit}} </td>
               <td> {{t.careerCode}} </td>
               <td> {{t.careerName}} </td>
               <td> {{t.titleCode}} </td>
               <td> {{t.titleName}} </td>
               <td> {{t.titleType}} </td>
-              <td> {{t.careerMode}} </td>
+              <td> {{t.titleMode}} </td>
+              <td> 
+                <span ng-if="isMissingData(t)"
+                class="glyphicon glyphicon-warning-sign" aria-hidden="true" 
+                style="color:red; font-size:10pt"
+                tooltip-html-unsafe="{{getMissingDataMessage(t)}}" tooltip-placement="left">
+                </span>
+              </td>
            </tr>  
         </tbody>
      </table>
   </div>
 </div>
-
+</div>

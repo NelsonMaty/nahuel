@@ -190,3 +190,15 @@ body{
 .be-careful:hover{
 	background-color: #E39169;
 }
+
+.row-missing-data {
+}
+
+/*row-missing-data:hover{
+	background-color: #F5DFBD !important;
+}*/
+
+.row-missing-data td {
+	color: rgb(245, 64, 64) !important; 
+	font-style: italic;
+}

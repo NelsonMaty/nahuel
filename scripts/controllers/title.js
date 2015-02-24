@@ -10,6 +10,38 @@
 angular.module('nahuel11App')
 .controller('TitleCtrl', ['$scope', 'dataFactory', function ($scope, dataFactory) {
 
+  $scope.isMissingData = function(title){
+    return (!title.titleMode || !title.academicUnit || !title.titleType || 
+      !title.careerName  || !title.state || !title.institutionName);
+  }
+
+  $scope.getMissingDataMessage = function(title){
+    var message = 
+    "<div style=\"padding-top:4px;\">"+
+      "Datos no definidos: "+
+    "</div>"+
+    "<ul style="+
+      "\"list-style-type: square;"+
+        "text-align: left;"+
+        "padding-left:30;"+
+        "padding-right:7;\";>";
+
+    if(!title.institutionName)
+      message+="<li>Institución Educativa</li>"
+    if(!title.academicUnit)
+      message+="<li>Unidad Académica</li>"
+    if(!title.careerName)
+      message+="<li>Nombre de Carrera</li>"
+    if(!title.titleMode)
+      message+="<li>Modalidad</li>"
+    if(!title.titleType)
+      message+="<li>Tipo de Título</li>"
+    if(!title.state)
+      message+="<li>Estado de Título</li>"
+
+    message+="</ul>";
+    return message;
+  }
   // Filtering variables
   $scope.query = ""; 
   $scope.auSelected = "";
@@ -26,7 +58,7 @@ angular.module('nahuel11App')
   $scope.openEditModal =function(title){
     $.extend(true, $scope.titleSelected, title); // creating a 'working copy'
     $('select[name=selectTitleState]').val(title.state); // selecting title state
-    $('select[name=selectTitleMode]').val(title.careerMode); // selecting title mode
+    $('select[name=selectTitleMode]').val(title.titleMode); // selecting title mode
     $('select[name=selectTitleType]').val(title.titleType);// selecting title type
     $('.selectpicker').selectpicker('refresh'); //refreshing (visually) the selectpickers
     $('#editModal').modal('show');
@@ -67,6 +99,13 @@ angular.module('nahuel11App')
   $scope.initSearchPanel = function() {
     $("#flip").click(function(){
       $("#panel").slideToggle(300);
+      event.stopPropagation();
+    });
+    $('html').click(function() {
+      $("#panel").slideUp(300);
+    });
+    $('#panel').click(function(event){
+      event.stopPropagation();
     });
   }
   
@@ -294,7 +333,7 @@ angular.module('nahuel11App')
     $scope.career = "";
     $scope.titleType = "";
     $scope.title = "";
-    $scope.resType= "";
+    $scope.resType= {};
     $scope.resNro = "";
     $scope.resYear = "";
     $scope.titleStateSearch = {1:false,3:true,4:false,5:false,6:false,};
@@ -309,7 +348,7 @@ angular.module('nahuel11App')
 
   $scope.searchTitles = function () {
     $("#panel").slideToggle(300); // Hide the search panel
-
+    //$('#jstree_demo_div').jstree('select_node', 'j1_1') // Select root node on the tree
     var searchFilters = {};
     if(!!$scope.institution)
       searchFilters.institution = $scope.institution;
@@ -324,7 +363,7 @@ angular.module('nahuel11App')
     if(!!$scope.title)
       searchFilters.title = $scope.title;
     if(!!$scope.resType)
-      searchFilters.resolutionType = $scope.resType;
+      searchFilters.resolutionType = $scope.resType.resolutionTypeName;
     if(!!$scope.resNro)
       searchFilters.resolutionNumber = $scope.resNro;
     if(!!$scope.resYear)
