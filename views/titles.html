@@ -126,8 +126,8 @@
             </form>
          </div>
          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary">Solicitar Alta</button>
          </div>
       </div>
    </div>
@@ -197,16 +197,35 @@
           </div>
 
           <div class="form-group">
+            <label for="resolutions" class="col-sm-2 control-label">Resoluciones</label>
+            <div class="col-sm-6">
+              <div class="resolutions-container">
+                <div class="resolution" ng-repeat="resolution in resolutions">
+                    <i class="fa fa-file-pdf-o resolution-thumbnail" ></i>
+                    <span> {{resolution.resolutionTypeName}} </span>
+                    <span>{{resolution.resolutionNumber}} ({{resolution.resolutionYear}})</span>
+                </div>
+                <div class="resolution">
+                  <i class="fa fa-plus-square-o add-resolution" style=""></i>
+                  <span> Agregar resolución</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
             <label for="titleComment" class="col-sm-2 control-label">Comentario</label>
             <div class="col-sm-9">
-              <textarea rows="2" class="form-control" id="titleComment" ng-model="titleSelected.titleComment" style="resize:vertical"></textarea>
+              <textarea rows="2" class="form-control" id="titleComment" ng-model="titleSelected.titleComment" style="resize:vertical;font-style: italic;"></textarea>
             </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" ng-click="saveTitleChanges()">
+          Guardar Cambios
+        </button>
       </div>
     </div>
   </div>
@@ -440,4 +459,7 @@
      </table>
   </div>
 </div>
+</div>
+<div ng-controller="toasty-controller">
+    <toasty-container toasty-defaults='{"timeout": 3000, "close-button":true}'></toasty-container>        
 </div>

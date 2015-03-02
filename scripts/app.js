@@ -4,9 +4,11 @@ var nahuel11App =
 angular
   //url navigation
   .module('nahuel11App', [
+    'ngAnimate',
     'ngRoute',
     'ui.bootstrap',
     'ng-context-menu',
+    'toasty'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -33,6 +35,11 @@ angular
       searchFilters = searchFilters || {}; // Null parameter case
       return $http.get(urlBase + 'titles', {params:searchFilters}); 
     };
+
+    dataFactory.getResolutions = function (title){
+      var idTitleReq = { idTitle: title.idTitle || null};
+      return $http.get(urlBase + 'resolutions', {params:idTitleReq});
+    }
 
     //get institutions
     dataFactory.getInstitutions = function (){
@@ -69,6 +76,11 @@ angular
       return $http.get(urlBase + 'academicUnitsHierarchy');
     };
 
+    //update a single title
+    dataFactory.updateTitle = function(updatedTitle){
+      return $http.post(urlBase + 'title', {title: updatedTitle});
+    };
+
     return dataFactory;
   }]
-  );
+);

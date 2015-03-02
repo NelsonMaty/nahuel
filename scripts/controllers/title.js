@@ -8,7 +8,9 @@
  * Controller of the nahuel11App
  */
 angular.module('nahuel11App')
-.controller('TitleCtrl', ['$scope', 'dataFactory', function ($scope, dataFactory) {
+.controller('TitleCtrl', ['$scope', 'dataFactory', 'toasty', function ($scope, dataFactory, toasty) {
+
+  $scope.resolutions = [];
 
   $scope.isMissingData = function(title){
     return (!title.titleMode || !title.academicUnit || !title.titleType || 
@@ -61,6 +63,17 @@ angular.module('nahuel11App')
     $('select[name=selectTitleMode]').val(title.titleMode); // selecting title mode
     $('select[name=selectTitleType]').val(title.titleType);// selecting title type
     $('.selectpicker').selectpicker('refresh'); //refreshing (visually) the selectpickers
+    dataFactory.getResolutions(title)
+      .success(function(data) {
+        $scope.resolutions = data;
+        $scope.resolutions.forEach(function(res){
+          // Shrinking the resolution type label a bit
+          res.resolutionTypeName = res.resolutionTypeName.replace('Resolución', 'Res.'); 
+        });
+      })
+      .error(function(error) {
+      console.log("Unable to load titles data." + error.message);
+    });
     $('#editModal').modal('show');
   }
 
@@ -323,7 +336,7 @@ angular.module('nahuel11App')
       .error(function (error){
         console.log("Unable to load titles data." + error.message);
       });
-  }
+  };
 
   $scope.cleanSearchFields = function () {
     $scope.query = ""; 
@@ -344,7 +357,7 @@ angular.module('nahuel11App')
     .error(function (error){
       console.log("Unable to load titles data." + error.message);
     });
-  }
+  };
 
   $scope.searchTitles = function () {
     $("#panel").slideToggle(300); // Hide the search panel
@@ -377,6 +390,27 @@ angular.module('nahuel11App')
     .error(function (error){
       console.log("Unable to load titles data." + error.message);
     });
-  }
+  };
+
+  $scope.saveTitleChanges = function(){
+    //$('.selectpicker option:selected').val()
+    dataFactory.updateTitle($scope.titleSelected)
+      .success(function(data, status){
+        toasty.pop.success({
+          title: "Cambios guardados",
+          timeout: 3500,
+          showClose: true,
+          onClick: function(toasty) {
+            toasty.title = '';
+            toasty.msg = 'El título "' + $scope.titleSelected.titleName+ '" ha sido actualizado exitosamente.' ;
+            toasty.timeout = 5000;
+          },
+        });
+      })
+      .error(function(){
+        console.log("Error intentando actualizar titulo");
+      });
+    $('#editModal').modal('hide');
+  };
 
 }]);
