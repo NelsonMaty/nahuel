@@ -231,7 +231,21 @@ body{
 }
 
 .add-resolution {
+	cursor: pointer;
+}
+
+.add-resolution i{
 	font-size: 27pt !important;
 	color: #BABABA;
 	padding-top:5px
+}
+
+.add-resolution:hover{
+	text-decoration: underline;
+}
+
+.dotted-overflow{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }

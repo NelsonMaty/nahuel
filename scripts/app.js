@@ -61,6 +61,11 @@ angular
       return $http.get(urlBase + 'titleTypes');
     };
 
+    //get all title types
+    dataFactory.getTitleModes = function (){
+      return $http.get(urlBase + 'titleModes');
+    };
+
     //get all careers
     dataFactory.getCareers = function (){
       return $http.get(urlBase + 'careers');
@@ -79,6 +84,11 @@ angular
     //update a single title
     dataFactory.updateTitle = function(updatedTitle){
       return $http.post(urlBase + 'title', {title: updatedTitle});
+    };
+
+    //get or create resolution
+    dataFactory.getResolution = function(requestedRes){
+      return $http.post(urlBase + 'resolution', {resolution: requestedRes})
     };
 
     return dataFactory;

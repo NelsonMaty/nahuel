@@ -134,7 +134,7 @@
 </div>
 
 <!-- EDITION MODAL -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -164,10 +164,10 @@
           <div class="form-group">
             <label for="titleStateCB" class="col-sm-2 control-label">Estado actual</label>
             <div class="col-sm-6" id="titleStateCB">
-              <select class="selectpicker form-control" name="selectTitleState">
+              <select class="selectpicker form-control" id="selectTitleState" name="selectTitleState">
               <optgroup label="Título Pendiente">
-                <option value="1" title="Título Pendiente Sin Código ONA">Sin Código ONA</option>
-                <option value="6" title="Título Pendiente Con Código ONA">Con Código ONA</option>
+                <option value="1" title="Título Pendiente de Alta">Pendiente de Alta</option>
+                <option value="2" title="Título Pendiente de Modificación">Pendiente de Modificación</option>
               </optgroup>
               <optgroup label="Vigente">
                 <option value="3" title="Título Vigente">Título Vigente</option>
@@ -176,6 +176,7 @@
                 <option value="5" title="Título No Vigente Con Actividad">Con Actividad</option>
                 <option value="4" title="Título No Vigente Sin Actividad">Sin Actividad</option>
               </optgroup>
+              <option title="No Definido" data-hidden="true"></option>
               </select>
             </div>
             
@@ -183,15 +184,16 @@
           <div class="form-group">
             <label for="titleTypeCB" class="col-sm-2 control-label">Tipo de título</label>
             <div class="col-sm-3">
-              <select class="selectpicker show-tick form-control" name="selectTitleType" >
-                <option ng-repeat="type in ttypes">{{type.titleTypeName}}</option>
+              <select class="selectpicker show-tick form-control" id="selectTitleType" name="selectTitleType">
+                <option title="No Definido" data-hidden="true"></option>
+                <option ng-repeat="type in ttypes" value="{{type.titleTypeCode}}">{{type.titleTypeName}}</option>
               </select>
             </div>
             <label for="titleModeCB" class="col-sm-1 control-label">Modalidad</label>
             <div class="col-sm-2">
-              <select class="selectpicker show-tick form-control" name="selectTitleMode" >
-                <option>Presencial</option>
-                <option>A Distancia</option>
+              <select class="selectpicker show-tick form-control" id="selectTitleMode" name="selectTitleMode">
+                <option title="No Definida" data-hidden="true"></option>
+                <option ng-repeat="mode in tmodes" value="{{mode.titleModeCode}}">{{mode.titleModeName}}</option>
               </select>
             </div>
           </div>
@@ -205,8 +207,8 @@
                     <span> {{resolution.resolutionTypeName}} </span>
                     <span>{{resolution.resolutionNumber}} ({{resolution.resolutionYear}})</span>
                 </div>
-                <div class="resolution">
-                  <i class="fa fa-plus-square-o add-resolution" style=""></i>
+                <div class="resolution add-resolution" ng-click="openAddResolutionModal()">
+                  <i class="fa fa-plus-square-o"></i>
                   <span> Agregar resolución</span>
                 </div>
               </div>
@@ -225,6 +227,54 @@
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary" ng-click="saveTitleChanges()">
           Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD RESOLUTION MODAL -->
+<div class="modal fade" id="addResModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog modal-md" style="margin-top: 13%;">
+    <div class="modal-content">
+      <div class="modal-header dotted-overflow">
+        <span class="modal-title" style="font-weight: bold;">Agregar Resolución - {{titleSelected.titleName}}</span>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="resType" class="col-sm-3 control-label">Tipo</label>
+            <div class="col-sm-6">
+              <select class="selectpicker show-tick form-control" id="selectResolutionType" name="selectResolutionType">
+                <option title="Seleccione un tipo" data-hidden="true" selected></option>
+                <option ng-repeat="rt in resTypes" value="{{rt.resolutionTypeCode}}">{{rt.resolutionTypeName}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="resType" class="col-sm-3 control-label">Número</label>
+            <div class="col-sm-3">
+              <input class="form-control" ng-model="resolution.resolutionNumber">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="resType" class="col-sm-3 control-label">Fecha</label>
+            <div class="col-sm-2">
+              <input class="form-control" ng-model="resolution.resolutionYear" placeholder="Año">
+            </div>
+            <div class="col-sm-2">
+              <input class="form-control" ng-model="resolution.resolutionMonth" placeholder="Mes">
+            </div>
+            <div class="col-sm-2">
+              <input class="form-control" ng-model="resolution." placeholder="Día">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelResolution()">Cancelar</button>
+        <button type="button" class="btn btn-primary" ng-click="submitResolution()">
+          Agregar resolución
         </button>
       </div>
     </div>
@@ -313,15 +363,15 @@
          </div>
          <div class="form-group">
             <label class="col-sm-3 control-label">Estado del Título:</label>
-            <div class="col-sm-8">
+            <div class="col-sm-9">
                <div class="checkbox-inline">
                  <label>
-                   <input type="checkbox" ng-model="titleStateSearch['1']" > Pendiente
+                   <input type="checkbox" ng-model="titleStateSearch['1']" > Pendiente de Alta
                  </label>
                </div>
                <div class="checkbox-inline">
                  <label>
-                   <input type="checkbox" ng-model="titleStateSearch['6']"> Pendiente con código ONA
+                   <input type="checkbox" ng-model="titleStateSearch['2']"> Pendiente de Modificación
                  </label>
                </div>
                <div class="checkbox-inline">
@@ -332,7 +382,7 @@
              </div>
          </div>
          <div class="form-group">
-             <div class="col-sm-offset-3 col-sm-8">
+             <div class="col-sm-offset-3 col-sm-9">
                <div class="checkbox-inline">
                  <label>
                    <input type="checkbox" ng-model="titleStateSearch['5']"> No Vigente con Actividad
@@ -370,7 +420,7 @@
 <div class="col-md-7"  style="position: relative; top: -5px; margin-bottom: 10">
    <div class="radio-button-width"> 
       <div class="radio-inline">
-         <input type="radio" name="searchOptions" id="inlineRadio1" value="1" ng-model="statusOption"> <small>Títulos Pendientes</small>
+         <input type="radio" name="searchOptions" id="inlineRadio1" value="1" ng-model="statusOption"> <small>Títulos Pendientes de Alta</small>
       </div>
          <span class="badge">{{countState(1)}}</span>
    </div>
@@ -390,10 +440,10 @@
    </div>
    <div class="radio-button-width"> 
       <div class="radio-inline">
-         <input type="radio" name="searchOptions" id="inlineRadio4" value="6" ng-model="statusOption"> 
-            <small>Títulos Pendientes con Código ONA</small>
+         <input type="radio" name="searchOptions" id="inlineRadio4" value="2" ng-model="statusOption"> 
+            <small>Títulos Pendientes de Modificación</small>
       </div>
-      <span class="badge">{{countState(6)}}</span>
+      <span class="badge">{{countState(2)}}</span>
    </div>
    <div class="radio-button-width"> 
      <div class="radio-inline">
@@ -461,5 +511,5 @@
 </div>
 </div>
 <div ng-controller="toasty-controller">
-    <toasty-container toasty-defaults='{"timeout": 3000, "close-button":true}'></toasty-container>        
+    <toasty-container toasty-defaults='{"timeout": 3000, "close-button":true}'></toasty-container>
 </div>

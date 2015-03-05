@@ -11,11 +11,37 @@ angular.module('nahuel11App')
 .controller('TitleCtrl', ['$scope', 'dataFactory', 'toasty', function ($scope, dataFactory, toasty) {
 
   $scope.resolutions = [];
+  $scope.resolution = {};
+
+  $scope.submitResolution = function(){
+    $scope.resolution.resolutionTypeCode = $('#selectResolutionType option:selected').val(); //reading type selected
+    dataFactory.getResolution($scope.resolution)
+      .success(function(data){
+        // Shrinking the resolution type label a bit
+        data.resolution.resolutionTypeName = data.resolution.resolutionTypeName.replace('Resolución', 'Res.'); 
+        $scope.resolutions.push(data.resolution); // adding resolution to array
+      })
+    $('#editModal').modal('show');
+    $('#addResModal').modal('hide');
+
+  }
+
+  $scope.cancelResolution = function(){
+    $('#editModal').modal('show');
+    $('#addResModal').modal('hide');
+  }
+
+  $scope.openAddResolutionModal = function(){
+    $scope.resolution = {}
+    $('select[name=selectResolutionType]').val(null); // selecting default option
+    $('#editModal').modal('hide');
+    $('#addResModal').modal('show');
+  }
 
   $scope.isMissingData = function(title){
     return (!title.titleMode || !title.academicUnit || !title.titleType || 
       !title.careerName  || !title.state || !title.institutionName);
-  }
+  };
 
   $scope.getMissingDataMessage = function(title){
     var message = 
@@ -54,14 +80,16 @@ angular.module('nahuel11App')
   $scope.career = "";
   $scope.titleType = "";
   $scope.resType= "";
-  $scope.titleStateSearch = {1:false,3:true,4:false,5:false,6:false,};
+  $scope.titleStateSearch = {1:false,2:false,3:true,4:false,5:false,};
   $scope.titleSelected = {};
+  $scope.titleClicked = {};
 
   $scope.openEditModal =function(title){
+    $scope.titleClicked = title;
     $.extend(true, $scope.titleSelected, title); // creating a 'working copy'
-    $('select[name=selectTitleState]').val(title.state); // selecting title state
-    $('select[name=selectTitleMode]').val(title.titleMode); // selecting title mode
-    $('select[name=selectTitleType]').val(title.titleType);// selecting title type
+    $('select[name=selectTitleState]').val(title.state);    // selecting title state
+    $('select[name=selectTitleMode]').val(title.titleModeCode); // selecting title mode
+    $('select[name=selectTitleType]').val(title.titleTypeCode); // selecting title type
     $('.selectpicker').selectpicker('refresh'); //refreshing (visually) the selectpickers
     dataFactory.getResolutions(title)
       .success(function(data) {
@@ -96,14 +124,14 @@ angular.module('nahuel11App')
   }
 
   $scope.countState = function(stateValue) {
-      var count = 0;
-      for (var i = 0; i < $scope.titleTable.length; i++) { 
-        if($scope.titleTable[i].state == stateValue){
-          count = count + 1;
-        }
+    var count = 0;
+    for (var i = 0; i < $scope.titleTable.length; i++) { 
+      if($scope.titleTable[i].state == stateValue){
+        count = count + 1;
       }
-      return count;
     }
+    return count;
+  }
 
   $scope.countCareers = function() {
     return $scope.titleTable.length;
@@ -326,6 +354,18 @@ angular.module('nahuel11App')
       });
   }
 
+  $scope.tmodes = [];
+  getTitleModes();
+  function getTitleModes() {
+    dataFactory.getTitleModes()
+      .success(function(data) {
+        $scope.tmodes = data;
+      })
+      .error(function (error){
+        console.log("Unable to load titles data." + error.message);
+      });
+  }
+
   $scope.resTypes = [];
   getResolutionTypes();
   function getResolutionTypes() {
@@ -393,22 +433,36 @@ angular.module('nahuel11App')
   };
 
   $scope.saveTitleChanges = function(){
-    //$('.selectpicker option:selected').val()
+    $scope.titleSelected.state = $('#selectTitleState option:selected').val();     //reading state value
+    $scope.titleSelected.titleType = $('#selectTitleType option:selected').val();  //reading type value
+    $scope.titleSelected.titleMode = $('#selectTitleMode option:selected').val();  //reading mode value
+
+    $scope.titleSelected.resolutions = [];
+    $scope.resolutions.forEach(
+      function(res){
+        $scope.titleSelected.resolutions.push(res.resolutionId);
+      });
+
     dataFactory.updateTitle($scope.titleSelected)
       .success(function(data, status){
+        $.extend(true, $scope.titleClicked, data.updatedTitle); // reflecting changes on the title table
         toasty.pop.success({
           title: "Cambios guardados",
           timeout: 3500,
           showClose: true,
           onClick: function(toasty) {
-            toasty.title = '';
             toasty.msg = 'El título "' + $scope.titleSelected.titleName+ '" ha sido actualizado exitosamente.' ;
             toasty.timeout = 5000;
-          },
+          }
         });
       })
       .error(function(){
-        console.log("Error intentando actualizar titulo");
+        toasty.pop.error({
+          title: 'Error',
+          msg: 'No ha sido posible registrar los cambios.',
+          timeout: 10000,
+          showClose: true,
+        });
       });
     $('#editModal').modal('hide');
   };
