@@ -158,7 +158,8 @@ angular.module('nahuel11App')
 
   //splitter initializer
   $scope.initSplitter = function(){
-    $('#mainSplitter').jqxSplitter({ width: "100%", height: "87.5%", panels: [{ size: 310 }]});
+    $('#mainSplitter').jqxSplitter({ width: "100%", height: "87.5%", 
+        panels: [{ size: 310}]});
   };
 
   $scope.countState = function(stateValue) {
