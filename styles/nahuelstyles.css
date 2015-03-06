@@ -111,7 +111,7 @@ body{
 	background-color: #5AA9C5;
 	position: absolute;
 	top: 63px;
-	left: 243px;
+	left: 17.8%;
 	z-index: 10;
 	height: 393px;
 	color: white;
@@ -248,4 +248,9 @@ body{
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.form-group.required .control-label:after{
+	content: "*";
+	color: red;
 }

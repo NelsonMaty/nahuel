@@ -10,33 +10,71 @@
 angular.module('nahuel11App')
 .controller('TitleCtrl', ['$scope', 'dataFactory', 'toasty', function ($scope, dataFactory, toasty) {
 
+  angular.element(document).ready(function () {
+      $(".numeric-input").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) || 
+             // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+      });
+    });
+
   $scope.resolutions = [];
   $scope.resolution = {};
 
   $scope.submitResolution = function(){
-    $scope.resolution.resolutionTypeCode = $('#selectResolutionType option:selected').val(); //reading type selected
+
+    $scope.resolution.resolutionTypeCode = $('#selectResolutionType option:selected').val(); //reading resolution type selected
+    if(!$scope.resolution.resolutionTypeCode ){
+      toasty.pop.warning({
+        title: 'Dato Faltante',
+        msg: 'Seleccione un tipo de resolución',
+        timeout: 6000,
+        showClose: true,
+      });
+      return;
+    }
+
     dataFactory.getResolution($scope.resolution)
       .success(function(data){
         // Shrinking the resolution type label a bit
         data.resolution.resolutionTypeName = data.resolution.resolutionTypeName.replace('Resolución', 'Res.'); 
         $scope.resolutions.push(data.resolution); // adding resolution to array
       })
+      .error(function (error){
+        toasty.pop.error({
+          title: 'Error',
+          msg: 'No ha sido posible obtener la resolución.',
+          timeout: 5000,
+          showClose: true,
+        });
+      });
     $('#editModal').modal('show');
     $('#addResModal').modal('hide');
-
-  }
+  };
 
   $scope.cancelResolution = function(){
     $('#editModal').modal('show');
     $('#addResModal').modal('hide');
-  }
+  };
 
   $scope.openAddResolutionModal = function(){
-    $scope.resolution = {}
-    $('select[name=selectResolutionType]').val(null); // selecting default option
+    $scope.resolution = {};
+    console.log($scope.resolution);
+    $('select[name=selectResolutionType]').val(''); // selecting default option
+    $('.selectpicker').selectpicker('refresh'); //refreshing (visually) the selectpickers
     $('#editModal').modal('hide');
     $('#addResModal').modal('show');
-  }
+  };
 
   $scope.isMissingData = function(title){
     return (!title.titleMode || !title.academicUnit || !title.titleType || 
@@ -103,7 +141,7 @@ angular.module('nahuel11App')
       console.log("Unable to load titles data." + error.message);
     });
     $('#editModal').modal('show');
-  }
+  };
 
   // Table filter by node selection
   $scope.criteriaMatch = function() {
@@ -121,7 +159,7 @@ angular.module('nahuel11App')
   //splitter initializer
   $scope.initSplitter = function(){
     $('#mainSplitter').jqxSplitter({ width: "100%", height: "87.5%", panels: [{ size: 310 }]});
-  }
+  };
 
   $scope.countState = function(stateValue) {
     var count = 0;
@@ -131,7 +169,7 @@ angular.module('nahuel11App')
       }
     }
     return count;
-  }
+  };
 
   $scope.countCareers = function() {
     return $scope.titleTable.length;
@@ -148,13 +186,13 @@ angular.module('nahuel11App')
     $('#panel').click(function(event){
       event.stopPropagation();
     });
-  }
+  };
   
   $scope.initClosePanelButton = function() {
     $(".search-widget .close").click(function(){
       $("#panel").slideToggle(300);
     });
-  }
+  };
 
   /*-----------------------------------------
     - ACADEMCIT UNIT TREE RELATED FUNCTIONS -
@@ -192,7 +230,7 @@ angular.module('nahuel11App')
         $scope.traverseNode(node);
       });
     return;
-  }
+  };
 
   // builds an array of titles (leaves)
   $scope.buildSubtreeArray = function (node){
@@ -437,6 +475,36 @@ angular.module('nahuel11App')
     $scope.titleSelected.titleType = $('#selectTitleType option:selected').val();  //reading type value
     $scope.titleSelected.titleMode = $('#selectTitleMode option:selected').val();  //reading mode value
 
+    if(!$scope.titleSelected.state ){
+      toasty.pop.warning({
+        title: 'Dato Faltante',
+        msg: 'Debe seleccionar un estado actual para el título',
+        timeout: 5000,
+        showClose: true,
+      });
+      return;
+    }
+
+    if(!$scope.titleSelected.titleType ){
+      toasty.pop.warning({
+        title: 'Dato Faltante',
+        msg: 'Debe seleccionar un tipo para el título',
+        timeout: 5000,
+        showClose: true,
+      });
+      return;
+    }
+
+    if(!$scope.titleSelected.titleMode ){
+      toasty.pop.warning({
+        title: 'Dato Faltante',
+        msg: 'Debe seleccionar una modalidad para el título',
+        timeout: 5000,
+        showClose: true,
+      });
+      return;
+    }
+
     $scope.titleSelected.resolutions = [];
     $scope.resolutions.forEach(
       function(res){
@@ -445,6 +513,7 @@ angular.module('nahuel11App')
 
     dataFactory.updateTitle($scope.titleSelected)
       .success(function(data, status){
+        toasty.clear();
         $.extend(true, $scope.titleClicked, data.updatedTitle); // reflecting changes on the title table
         toasty.pop.success({
           title: "Cambios guardados",

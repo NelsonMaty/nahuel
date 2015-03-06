@@ -142,26 +142,26 @@
         <span class="modal-title" id="myModalLabel" style="font-weight: bold;">Edición de Título</span>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal">
-          <div class="form-group">
+        <form class="form-horizontal" ng-submit="saveTitleChanges()" style="margin-bottom:0">
+          <div class="form-group required">
             <label for="titleCodeInput" class="col-sm-2 control-label">Código ONA</label>
             <div class="col-sm-2">
-              <input type="text" class="form-control" id="titleCodeInput" ng-model="titleSelected.titleCode">
+              <input type="text" class="form-control numeric-input" id="titleCodeInput" ng-model="titleSelected.titleCode" required>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group required">
             <label for="titleNameInput" class="col-sm-2 control-label">Título</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="titleNameInput" ng-model="titleSelected.titleName">
+              <input type="text" class="form-control" id="titleNameInput" ng-model="titleSelected.titleName" required>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group required">
             <label for="femaleNameInput" class="col-sm-2 control-label">Título Femenino</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="femaleNameInput" ng-model="titleSelected.titleFemaleName">
+              <input type="text" class="form-control" id="femaleNameInput" ng-model="titleSelected.titleFemaleName" required>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group required">
             <label for="titleStateCB" class="col-sm-2 control-label">Estado actual</label>
             <div class="col-sm-6" id="titleStateCB">
               <select class="selectpicker form-control" id="selectTitleState" name="selectTitleState">
@@ -179,9 +179,8 @@
               <option title="No Definido" data-hidden="true"></option>
               </select>
             </div>
-            
           </div>
-          <div class="form-group">
+          <div class="form-group required">
             <label for="titleTypeCB" class="col-sm-2 control-label">Tipo de título</label>
             <div class="col-sm-3">
               <select class="selectpicker show-tick form-control" id="selectTitleType" name="selectTitleType">
@@ -221,13 +220,13 @@
               <textarea rows="2" class="form-control" id="titleComment" ng-model="titleSelected.titleComment" style="resize:vertical;font-style: italic;"></textarea>
             </div>
           </div>
-        </form>
-      </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="padding-bottom:0px">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" ng-click="saveTitleChanges()">
+        <button type="submit" class="btn btn-primary" >
           Guardar Cambios
         </button>
+      </div>
+        </form>
       </div>
     </div>
   </div>
@@ -241,41 +240,45 @@
         <span class="modal-title" style="font-weight: bold;">Agregar Resolución - {{titleSelected.titleName}}</span>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal">
-          <div class="form-group">
+        <form class="form-horizontal" ng-submit="submitResolution()" style="margin-bottom:0">
+          <div class="form-group required">
             <label for="resType" class="col-sm-3 control-label">Tipo</label>
-            <div class="col-sm-6">
-              <select class="selectpicker show-tick form-control" id="selectResolutionType" name="selectResolutionType">
-                <option title="Seleccione un tipo" data-hidden="true" selected></option>
+            <div class="col-sm-6" data-toggle="popover">
+              <select class="selectpicker show-tick form-control" id="selectResolutionType" name="selectResolutionType" >
+                <option title="Seleccione un tipo" data-hidden="true"></option>
                 <option ng-repeat="rt in resTypes" value="{{rt.resolutionTypeCode}}">{{rt.resolutionTypeName}}</option>
               </select>
             </div>
           </div>
-          <div class="form-group">
-            <label for="resType" class="col-sm-3 control-label">Número</label>
-            <div class="col-sm-3">
-              <input class="form-control" ng-model="resolution.resolutionNumber">
+            <div class="form-group required">
+              <label for="resType" class="col-sm-3 control-label">Número</label>
+              <div class="col-sm-3">
+                <input class="form-control numeric-input" ng-model="resolution.resolutionNumber" required>
+              </div>
+              <label for="resType" class="col-sm-1 control-label">Año</label>
+              <div class="col-sm-2">
+                <input class="form-control numeric-input" ng-model="resolution.resolutionYear" required maxlength="4" size="4">
+              </div>
             </div>
-          </div>
           <div class="form-group">
             <label for="resType" class="col-sm-3 control-label">Fecha</label>
             <div class="col-sm-2">
-              <input class="form-control" ng-model="resolution.resolutionYear" placeholder="Año">
+              <input class="form-control" ng-model="resolution.resolutionYear" placeholder="Año" maxlength="4" size="4">
             </div>
             <div class="col-sm-2">
               <input class="form-control" ng-model="resolution.resolutionMonth" placeholder="Mes">
             </div>
             <div class="col-sm-2">
-              <input class="form-control" ng-model="resolution." placeholder="Día">
+              <input class="form-control" ng-model="resolution.resolutionDay" placeholder="Día">
             </div>
           </div>
+          <div class="modal-footer" style="padding-bottom:0px">
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelResolution()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+              Agregar resolución
+            </button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelResolution()">Cancelar</button>
-        <button type="button" class="btn btn-primary" ng-click="submitResolution()">
-          Agregar resolución
-        </button>
       </div>
     </div>
   </div>
@@ -355,10 +358,10 @@
               </select>
             </div>
             <div class="col-sm-2" style="padding-left:0">
-               <input class="form-control input-sm" id="G" placeholder="Número" ng-model="resNro">
+               <input class="form-control input-sm numeric-input" id="G" placeholder="Número" ng-model="resNro">
             </div>
             <div class="col-sm-2" style="padding-left:0">
-               <input class="form-control input-sm" id="G" placeholder="Año" ng-model="resYear">
+               <input class="form-control input-sm numeric-input" id="G" placeholder="Año" ng-model="resYear" maxlength="4" size="4">
             </div>
          </div>
          <div class="form-group">
