@@ -1,20 +1,206 @@
 <div id="titlePage">
-<!-- PAGE TITLE 
-<div class="col-md-10 col-md-offset-2 title">
-   <strong>
-      UNC Universidad Nacional de Córdoba - Títulos Vigentes
-   </strong>
-</div>
--->
-<!-- CREATE BUTTON -->
-<div class="col-md-2" style="text-align: center;">
-   <button type="button" class="btn btn-success" style="padding: 7px 15px;border-radius: 0;" 
-      data-toggle="modal" data-target="#creationModal"> 
-      Solicitar alta de un título 
-   </button>
+<!-- LOGO -->
+<div class="col-md-2">
+  <img src="images/nahuelapaizado.jpg" style="width: 80%; display: block; margin: auto;">
 </div>
 
-<!-- CREATION MODAL -->
+<!-- SEARCH WIDGET -->
+<div class="search-widget ">
+  <!-- Input search text -->
+  <div class="col-md-6">
+    <div class="fake-input">
+      <input type="text" class="no-input-style search-box" ng-model="query" class="search-box"
+        ng-keypress="searchOnEnter($event)">
+      <div>
+        
+        <i class="fa fa-caret-down advanced-search-button" id="flip" ng-init="initSearchPanel()"
+           tooltip="Búsqueda avanzada"
+         tooltip-placement="bottom"
+         tooltip-popup-delay='800'></i>
+         <span class="glyphicon glyphicon-remove clear-search" ng-show="!!query" ng-click="clearSearch()">
+        </span>
+      </div>
+    </div>
+    <i class="fa fa-search search-button"
+       ng-click="searchTitles()"
+       >
+    </i>
+   </div>
+
+   <!-- Advanced search panel -->
+   <div id="panel" style="display:none" class="col-md-6">
+      <!-- Panel title label -->
+      <span class="title">
+         <span class="glyphicon glyphicon-search" style="font-size:9pt"></span>
+         <span> Buscar</span>
+      </span>
+
+      <!-- Panel close button 
+      <span class="close" ng-init="initClosePanelButton()">
+         <span class="glyphicon glyphicon-remove" style="font-size:9pt;position: relative; top: 0px;">
+         </span>
+      </span>-->
+
+      <!-- Search form -->
+      <form class="form-horizontal" role="form" style="margin-top: 12px;font-size: 13px;zoom:0.9;">
+         <div class="form-group form-group-sm">
+            <label for="A" class="col-sm-3 control-label">Institución:</label>
+            <div class="col-sm-8">
+               <input class="form-control input-sm" id="A" ng-model="institution" typeahead="i.institutionName for i in institutions | filter:$viewValue | limitTo:8" >
+            </div>
+         </div>
+         <div class="form-group form-group-sm">
+            <label for="B" class="col-sm-3 control-label">Unidad Académica:</label>
+            <div class="col-sm-8">
+               <input class="form-control input-sm" id="B" ng-model="au" typeahead="a.auName for a in aus | filter:$viewValue | limitTo:8">
+            </div>
+         </div>
+         <div class="form-group form-group-sm">
+            <label for="C" class="col-sm-3 control-label">Tipo de Carrera:</label>
+            <div class="col-sm-8">
+               <input class="form-control input-sm" id="C" ng-model="ct" typeahead="ct.careerTypeName for ct in cts | filter:$viewValue | limitTo:8">
+            </div>
+         </div>
+         <div class="form-group form-group-sm">
+            <label for="D" class="col-sm-3 control-label">Carrera:</label>
+            <div class="col-sm-8">
+               <input class="form-control input-sm" id="D" ng-model="career" typeahead="c.careerName for c in careers | filter:$viewValue | limitTo:8">
+            </div>
+         </div>
+         <div class="form-group form-group-sm">
+            <label for="E" class="col-sm-3 control-label">Tipo de Título:</label>
+            <div class="col-sm-8">
+               <input class="form-control input-sm" id="E" ng-model="titleType" typeahead="tt.titleTypeName for tt in ttypes | filter:$viewValue | limitTo:8">
+            </div>
+         </div>
+         <div class="form-group form-group-sm">
+            <label for="F" class="col-sm-3 control-label">Título:</label>
+            <div class="col-sm-8">
+               <input class="form-control input-sm" id="F" ng-model="title" typeahead="t.titleName for t in titleTable | filter:$viewValue | limitTo:8">
+            </div>
+         </div>
+         <div class="form-group form-group-sm">
+            <label for="G" class="col-sm-3 control-label">Tipo de Resolución:</label>
+            <div class="col-sm-4">
+              <select class="form-control" ng-model="resType" ng-options="rt.resolutionTypeName for rt in resTypes">
+                <option></option> <!--empty value option -->
+              </select>
+            </div>
+            <div class="col-sm-2" style="padding-left:0">
+               <input class="form-control input-sm numeric-input" id="G" placeholder="Número" ng-model="resNro">
+            </div>
+            <div class="col-sm-2" style="padding-left:0">
+               <input class="form-control input-sm numeric-input" id="G" placeholder="Año" ng-model="resYear" maxlength="4" size="4">
+            </div>
+         </div>
+         <div class="form-group">
+            <label class="col-sm-3 control-label">Estado del Título:</label>
+            <div class="col-sm-9">
+               <div class="checkbox-inline">
+                 <label>
+                   <input type="checkbox" ng-model="titleStateSearch['1']" > Pendiente de Alta
+                 </label>
+               </div>
+               <div class="checkbox-inline">
+                 <label>
+                   <input type="checkbox" ng-model="titleStateSearch['2']"> Pendiente de Modificación
+                 </label>
+               </div>
+               <div class="checkbox-inline">
+                 <label>
+                   <input type="checkbox" ng-model="titleStateSearch['3']"> Vigente
+                 </label>
+               </div>
+             </div>
+         </div>
+         <div class="form-group">
+             <div class="col-sm-offset-3 col-sm-9">
+               <div class="checkbox-inline">
+                 <label>
+                   <input type="checkbox" ng-model="titleStateSearch['5']"> No Vigente con Actividad
+                 </label>
+               </div>
+               <div class="checkbox-inline">
+                 <label>
+                   <input type="checkbox" ng-model="titleStateSearch['4']"> No Vigente sin Actividad
+                 </label>
+               </div>
+             </div>
+         </div>
+         <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-8">
+              <button type="button" 
+                class="btn btn-info btn-sm pull-right" style="padding: 7px 28px;">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 
+                  Buscar
+              </button>
+              <button type="button" ng-click="cleanSearchFields()"
+                class="btn btn-info btn-sm pull-right be-careful" style="padding: 7px 28px; margin-right: 15px;">
+                <span class="glyphicon glyphicon-erase" aria-hidden="true"></span> 
+                  Limpiar
+              </button>
+            </div>
+         </div>
+      </form>
+      <!-- END: Search form -->
+   </div>
+   <!-- END: Advanced search panel -->
+</div>
+<!-- END: SEARCH WIDGET -->
+
+<div class="col-md-2 col-md-offset-2">
+  <!--<span class="badge">Resultados 40 </span>-->
+</div>
+
+<div id="mainSplitter" style="border:0; clear:both; position: fixed;bottom: 0; top: 10.5%;width: 100%;height:100%!important">
+  <!-- TITLE TREE -->
+  <div class="splitter-panel col-md-2" id="jstree_demo_div" style="overflow: auto; font-size:10pt; padding-left: 0px;font-size: 11px;">
+  </div>
+  <!-- TABLE -->
+  <div class="splitter-panel datagrid col-md-10" ng-init="initSplitter()" style="overflow:auto;">
+     <table >
+        <col style="width:20%">
+        <col style="width:8%">
+        <col style="width:22%">
+        <col style="width:8%">
+        <col style="width:22%">
+        <col style="width:8%">
+        <col style="width:12%"> 
+        <thead >
+           <tr>
+              <th>Unidad Académica</th>
+              <th>Código de Carrera</th>
+              <th>Nombre de Carrera</th>
+              <th>Código de Título</th>
+              <th>Nombre de Título</th>
+              <th>Tipo de Título</th>
+              <th>Modalidad</th>
+              <th> </th>
+           </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="t in titleTable | filter: criteriaMatch()" 
+          style="height:47px" ng-click="openEditModal(t)">
+              <td> {{t.academicUnit}} </td>
+              <td> {{t.careerCode}} </td>
+              <td> {{t.careerName}} </td>
+              <td> {{t.titleCode}} </td>
+              <td> {{t.titleName}} </td>
+              <td> {{t.titleType}} </td>
+              <td> {{t.titleMode}} </td>
+              <td> 
+                <span ng-if="isMissingData(t)"
+                class="glyphicon glyphicon-warning-sign" aria-hidden="true" 
+                style="color:red; font-size:10pt"
+                tooltip-html-unsafe="{{getMissingDataMessage(t)}}" tooltip-placement="left">
+                </span>
+              </td>
+           </tr>  
+        </tbody>
+     </table>
+  </div>
+</div>
+<!-- CREATION MODAL 
 <div class="modal fade" id="creationModal" tabindex="-1" role="dialog" aria-hidden="true">
    <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -132,7 +318,7 @@
       </div>
    </div>
 </div>
-
+-->
 <!-- EDITION MODAL -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
   <div class="modal-dialog modal-lg">
@@ -281,235 +467,6 @@
         </form>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- SEARCH WIDGET -->
-<div class="search-widget">
-   <!-- Input search text -->
-   <div class="col-md-3">
-      <input type="text" placeholder="Búsqueda rápida" ng-model="query" class="search-box" 
-         style="height: 32px; padding-left: 5px; width: 89%; float:left;" />
-      <i class="fa fa-search search-button"
-         tooltip="Búsqueda avanzada"
-         tooltip-placement="right"
-         tooltip-popup-delay='1000'
-         id="flip" ng-init="initSearchPanel()">
-      </i>
-   </div>
-
-   <!-- Advanced search panel -->
-   <div id="panel" style="display:none" class="col-md-5">
-      <!-- Panel title label -->
-      <span class="title">
-         <span class="glyphicon glyphicon-search" style="font-size:9pt"></span>
-         <span> Buscar</span>
-      </span>
-
-      <!-- Panel close button -->
-      <span class="close" ng-init="initClosePanelButton()">
-         <span class="glyphicon glyphicon-remove" style="font-size:9pt;position: relative; top: 0px;">
-         </span>
-      </span>
-
-      <!-- Search form -->
-      <form class="form-horizontal" role="form" style="margin-top: 12px;font-size: 13px;zoom:0.9;">
-         <div class="form-group form-group-sm">
-            <label for="A" class="col-sm-3 control-label">Institución:</label>
-            <div class="col-sm-8">
-               <input class="form-control input-sm" id="A" ng-model="institution" typeahead="i.institutionName for i in institutions | filter:$viewValue | limitTo:8" >
-            </div>
-         </div>
-         <div class="form-group form-group-sm">
-            <label for="B" class="col-sm-3 control-label">Unidad Académica:</label>
-            <div class="col-sm-8">
-               <input class="form-control input-sm" id="B" ng-model="au" typeahead="a.auName for a in aus | filter:$viewValue | limitTo:8">
-            </div>
-         </div>
-         <div class="form-group form-group-sm">
-            <label for="C" class="col-sm-3 control-label">Tipo de Carrera:</label>
-            <div class="col-sm-8">
-               <input class="form-control input-sm" id="C" ng-model="ct" typeahead="ct.careerTypeName for ct in cts | filter:$viewValue | limitTo:8">
-            </div>
-         </div>
-         <div class="form-group form-group-sm">
-            <label for="D" class="col-sm-3 control-label">Carrera:</label>
-            <div class="col-sm-8">
-               <input class="form-control input-sm" id="D" ng-model="career" typeahead="c.careerName for c in careers | filter:$viewValue | limitTo:8">
-            </div>
-         </div>
-         <div class="form-group form-group-sm">
-            <label for="E" class="col-sm-3 control-label">Tipo de Título:</label>
-            <div class="col-sm-8">
-               <input class="form-control input-sm" id="E" ng-model="titleType" typeahead="tt.titleTypeName for tt in ttypes | filter:$viewValue | limitTo:8">
-            </div>
-         </div>
-         <div class="form-group form-group-sm">
-            <label for="F" class="col-sm-3 control-label">Título:</label>
-            <div class="col-sm-8">
-               <input class="form-control input-sm" id="F" ng-model="title" typeahead="t.titleName for t in titleTable | filter:$viewValue | limitTo:8">
-            </div>
-         </div>
-         <div class="form-group form-group-sm">
-            <label for="G" class="col-sm-3 control-label">Tipo de Resolución:</label>
-            <div class="col-sm-4">
-              <select class="form-control" ng-model="resType" ng-options="rt.resolutionTypeName for rt in resTypes">
-                <option></option> <!--empty value option -->
-              </select>
-            </div>
-            <div class="col-sm-2" style="padding-left:0">
-               <input class="form-control input-sm numeric-input" id="G" placeholder="Número" ng-model="resNro">
-            </div>
-            <div class="col-sm-2" style="padding-left:0">
-               <input class="form-control input-sm numeric-input" id="G" placeholder="Año" ng-model="resYear" maxlength="4" size="4">
-            </div>
-         </div>
-         <div class="form-group">
-            <label class="col-sm-3 control-label">Estado del Título:</label>
-            <div class="col-sm-9">
-               <div class="checkbox-inline">
-                 <label>
-                   <input type="checkbox" ng-model="titleStateSearch['1']" > Pendiente de Alta
-                 </label>
-               </div>
-               <div class="checkbox-inline">
-                 <label>
-                   <input type="checkbox" ng-model="titleStateSearch['2']"> Pendiente de Modificación
-                 </label>
-               </div>
-               <div class="checkbox-inline">
-                 <label>
-                   <input type="checkbox" ng-model="titleStateSearch['3']"> Vigente
-                 </label>
-               </div>
-             </div>
-         </div>
-         <div class="form-group">
-             <div class="col-sm-offset-3 col-sm-9">
-               <div class="checkbox-inline">
-                 <label>
-                   <input type="checkbox" ng-model="titleStateSearch['5']"> No Vigente con Actividad
-                 </label>
-               </div>
-               <div class="checkbox-inline">
-                 <label>
-                   <input type="checkbox" ng-model="titleStateSearch['4']"> No Vigente sin Actividad
-                 </label>
-               </div>
-             </div>
-         </div>
-         <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-8">
-              <button type="button" ng-click="searchTitles()"
-                class="btn btn-info btn-sm pull-right" style="padding: 7px 28px;">
-                <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 
-                  Buscar
-              </button>
-              <button type="button" ng-click="cleanSearchFields()"
-                class="btn btn-info btn-sm pull-right be-careful" style="padding: 7px 28px; margin-right: 15px;">
-                <span class="glyphicon glyphicon-erase" aria-hidden="true"></span> 
-                  Limpiar
-              </button>
-            </div>
-         </div>
-      </form>
-      <!-- END: Search form -->
-   </div>
-   <!-- END: Advanced search panel -->
-</div>
-<!-- END: SEARCH WIDGET -->
-
-<!-- SEARCH RADIO BUTTONS -->
-<div class="col-md-7"  style="position: relative; top: -5px; margin-bottom: 10">
-   <div class="radio-button-width"> 
-      <div class="radio-inline">
-         <input type="radio" name="searchOptions" id="inlineRadio1" value="1" ng-model="statusOption"> <small>Títulos Pendientes de Alta</small>
-      </div>
-         <span class="badge">{{countState(1)}}</span>
-   </div>
-
-   <div class="radio-button-width"> 
-      <div class="radio-inline">
-         <input type="radio" name="searchOptions" id="inlineRadio2" value="5" ng-model="statusOption"> <small>Títulos No Vigentes con Actividad</small>
-   </div>
-      <span class="badge">{{countState(5)}}</span>
-   </div>
-
-   <div class="radio-button-width"> 
-      <div class="radio-inline">
-         <input type="radio" name="searchOptions" id="inlineRadio3" value="3" ng-model="statusOption"> <small>Títulos Vigentes</small>
-      </div>
-      <span class="badge">{{countState(3)}}</span>
-   </div>
-   <div class="radio-button-width"> 
-      <div class="radio-inline">
-         <input type="radio" name="searchOptions" id="inlineRadio4" value="2" ng-model="statusOption"> 
-            <small>Títulos Pendientes de Modificación</small>
-      </div>
-      <span class="badge">{{countState(2)}}</span>
-   </div>
-   <div class="radio-button-width"> 
-     <div class="radio-inline">
-        <input type="radio" name="searchOptions" id="inlineRadio5" value="4" ng-model="statusOption"> 
-          <small>Títulos No Vigentes sin Actividad</small>
-     </div>
-     <span class="badge">{{countState(4)}}</span>
-   </div>
-   <div class="radio-button-width"> 
-     <div class="radio-inline">
-        <input type="radio" name="searchOptions" id="inlineRadio6" value="" ng-model="statusOption" checked="checked"> 
-          <small>Todos los Títulos</small>
-     </div>
-     <span class="badge">{{countCareers()}}</span>
-   </div>
-</div>
-
-<div id="mainSplitter" style="border:0; clear:both; position: fixed;bottom: 0; top: 10.5%;width: 100%;height:100%!important">
-  <!-- TITLE TREE -->
-  <div class="splitter-panel col-md-2" id="jstree_demo_div" style="overflow: auto; font-size:10pt; padding-left: 0px;font-size: 11px;">
-  </div>
-  <!-- TABLE -->
-  <div class="splitter-panel datagrid col-md-10" ng-init="initSplitter()" style="overflow:auto;">
-     <table >
-        <col style="width:20%">
-        <col style="width:8%">
-        <col style="width:22%">
-        <col style="width:8%">
-        <col style="width:22%">
-        <col style="width:8%">
-        <col style="width:12%"> 
-        <thead >
-           <tr>
-              <th>Unidad Académica</th>
-              <th>Código de Carrera</th>
-              <th>Nombre de Carrera</th>
-              <th>Código de Título</th>
-              <th>Nombre de Título</th>
-              <th>Tipo de Título</th>
-              <th>Modalidad</th>
-              <th> </th>
-           </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="t in titleTable | filter:query | filter: {state:statusOption} | filter: criteriaMatch()" 
-          style="height:47px" ng-click="openEditModal(t)">
-              <td> {{t.academicUnit}} </td>
-              <td> {{t.careerCode}} </td>
-              <td> {{t.careerName}} </td>
-              <td> {{t.titleCode}} </td>
-              <td> {{t.titleName}} </td>
-              <td> {{t.titleType}} </td>
-              <td> {{t.titleMode}} </td>
-              <td> 
-                <span ng-if="isMissingData(t)"
-                class="glyphicon glyphicon-warning-sign" aria-hidden="true" 
-                style="color:red; font-size:10pt"
-                tooltip-html-unsafe="{{getMissingDataMessage(t)}}" tooltip-placement="left">
-                </span>
-              </td>
-           </tr>  
-        </tbody>
-     </table>
   </div>
 </div>
 </div>

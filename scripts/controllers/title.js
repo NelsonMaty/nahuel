@@ -28,6 +28,16 @@ angular.module('nahuel11App')
       });
     });
 
+  $scope.searchOnEnter = function(keyEvent){
+    if (keyEvent.which === 13)
+      $scope.searchTitles();
+  };
+
+  $scope.clearSearch = function(){
+    $scope.query = "";
+    $scope.searchTitles();
+  };
+
   $scope.resolutions = [];
   $scope.resolution = {};
 
@@ -159,7 +169,7 @@ angular.module('nahuel11App')
   //splitter initializer
   $scope.initSplitter = function(){
     $('#mainSplitter').jqxSplitter({ width: "100%", height: "87.5%", 
-        panels: [{ size: 310}]});
+        panels: [{ size:  "17.7%)"}]});
   };
 
   $scope.countState = function(stateValue) {
@@ -439,10 +449,12 @@ angular.module('nahuel11App')
   };
 
   $scope.searchTitles = function () {
-    $("#panel").slideToggle(300); // Hide the search panel
+    $("#panel").slideUp(300); // Hide the search panel
     //$('#jstree_demo_div').jstree('select_node', 'j1_1') // Select root node on the tree
     var searchFilters = {};
-    if(!!$scope.institution)
+    if(!!$scope.query)
+      searchFilters.contains = $scope.query;
+    /*if(!!$scope.institution)
       searchFilters.institution = $scope.institution;
     if(!!$scope.au)
       searchFilters.academicUnit = $scope.au;
@@ -461,7 +473,7 @@ angular.module('nahuel11App')
     if(!!$scope.resYear)
       searchFilters.resolutionYear = $scope.resYear;
     searchFilters.titleStates = $scope.titleStateSearch;
-
+*/
     dataFactory.getTitles(searchFilters)
     .success(function(data) {
       $scope.titleTable = data;
