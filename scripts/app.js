@@ -29,7 +29,7 @@ angular
   .factory('dataFactory', ['$http', function($http){ 
     var urlBase = 'http://172.16.248.229:8080/api/'; //TODO: replace it for the actual url
     var dataFactory = {};
-
+    
     //get all titles
     dataFactory.getTitles = function (searchFilters){
       searchFilters = searchFilters || {}; // Null parameter case

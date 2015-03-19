@@ -12,10 +12,9 @@
       <input type="text" class="no-input-style search-box" ng-model="query" class="search-box"
         ng-keypress="searchOnEnter($event)">
       <div>
-        
         <i class="fa fa-caret-down advanced-search-button" id="flip" ng-init="initSearchPanel()"
            tooltip="Búsqueda avanzada"
-         tooltip-placement="bottom"
+         tooltip-placement="left"
          tooltip-popup-delay='800'></i>
          <span class="glyphicon glyphicon-remove clear-search" ng-show="!!query" ng-click="clearSearch()">
         </span>
@@ -35,11 +34,11 @@
          <span> Buscar</span>
       </span>
 
-      <!-- Panel close button 
+      <!-- Panel close button -->
       <span class="close" ng-init="initClosePanelButton()">
          <span class="glyphicon glyphicon-remove" style="font-size:9pt;position: relative; top: 0px;">
          </span>
-      </span>-->
+      </span>
 
       <!-- Search form -->
       <form class="form-horizontal" role="form" style="margin-top: 12px;font-size: 13px;zoom:0.9;">
@@ -52,13 +51,13 @@
          <div class="form-group form-group-sm">
             <label for="B" class="col-sm-3 control-label">Unidad Académica:</label>
             <div class="col-sm-8">
-               <input class="form-control input-sm" id="B" ng-model="au" typeahead="a.auName for a in aus | filter:$viewValue | limitTo:8">
+               <input class="form-control input-sm" id="B" ng-model="academicUnit" typeahead="a.auName for a in aus | filter:$viewValue | limitTo:8">
             </div>
          </div>
          <div class="form-group form-group-sm">
             <label for="C" class="col-sm-3 control-label">Tipo de Carrera:</label>
             <div class="col-sm-8">
-               <input class="form-control input-sm" id="C" ng-model="ct" typeahead="ct.careerTypeName for ct in cts | filter:$viewValue | limitTo:8">
+               <input class="form-control input-sm" id="C" ng-model="careerType" typeahead="ct.careerTypeName for ct in cts | filter:$viewValue | limitTo:8">
             </div>
          </div>
          <div class="form-group form-group-sm">
@@ -82,55 +81,42 @@
          <div class="form-group form-group-sm">
             <label for="G" class="col-sm-3 control-label">Tipo de Resolución:</label>
             <div class="col-sm-4">
-              <select class="form-control" ng-model="resType" ng-options="rt.resolutionTypeName for rt in resTypes">
-                <option></option> <!--empty value option -->
+              <select class="selectpicker show-tick form-control" id="searchResolutionType" name="searchResolutionType">
+                <option value="">Todos los tipos</option> 
+                <option ng-repeat="rt in resTypes" value="{{rt.resolutionTypeName}}">{{rt.resolutionTypeName}}</option>
               </select>
             </div>
             <div class="col-sm-2" style="padding-left:0">
-               <input class="form-control input-sm numeric-input" id="G" placeholder="Número" ng-model="resNro">
+               <input class="form-control input-sm numeric-input" id="G" placeholder="Número" ng-model="resolutionNumber">
             </div>
             <div class="col-sm-2" style="padding-left:0">
-               <input class="form-control input-sm numeric-input" id="G" placeholder="Año" ng-model="resYear" maxlength="4" size="4">
+               <input class="form-control input-sm numeric-input" id="G" placeholder="Año" ng-model="resolutionYear" maxlength="4" size="4">
             </div>
          </div>
-         <div class="form-group">
+         <div class="form-group form-group-sm">
             <label class="col-sm-3 control-label">Estado del Título:</label>
-            <div class="col-sm-9">
-               <div class="checkbox-inline">
-                 <label>
-                   <input type="checkbox" ng-model="titleStateSearch['1']" > Pendiente de Alta
-                 </label>
-               </div>
-               <div class="checkbox-inline">
-                 <label>
-                   <input type="checkbox" ng-model="titleStateSearch['2']"> Pendiente de Modificación
-                 </label>
-               </div>
-               <div class="checkbox-inline">
-                 <label>
-                   <input type="checkbox" ng-model="titleStateSearch['3']"> Vigente
-                 </label>
-               </div>
-             </div>
+            <div class="col-sm-8">
+              <select class="selectpicker form-control" multiple data-selected-text-format="Cualquier estado>4" id="searchTitleState" name="searchTitleState">
+                <optgroup label="Título Pendiente">
+                  <option value="1" title="Pend de Alta">Pendiente de Alta</option>
+                  <option value="2" title="Pend de Modif">Pendiente de Modificación</option>
+                </optgroup>
+                <optgroup label="Vigente">
+                  <option value="3" title="Vigente">Título Vigente</option>
+                </optgroup>
+                <optgroup label="Título No Vigente">
+                  <option value="5" title="No Vigente Act">Con Actividad</option>
+                  <option value="4" title="No Vigente Inact">Sin Actividad</option>
+                </optgroup>
+                <option title="No Definido" data-hidden="true"></option>
+              </select>
+            </div>
          </div>
-         <div class="form-group">
-             <div class="col-sm-offset-3 col-sm-9">
-               <div class="checkbox-inline">
-                 <label>
-                   <input type="checkbox" ng-model="titleStateSearch['5']"> No Vigente con Actividad
-                 </label>
-               </div>
-               <div class="checkbox-inline">
-                 <label>
-                   <input type="checkbox" ng-model="titleStateSearch['4']"> No Vigente sin Actividad
-                 </label>
-               </div>
-             </div>
-         </div>
+
          <div class="form-group">
             <div class="col-sm-offset-3 col-sm-8">
               <button type="button" 
-                class="btn btn-info btn-sm pull-right" style="padding: 7px 28px;">
+                class="btn btn-info btn-sm pull-right" style="padding: 7px 28px;" ng-click="buildStringQuery()">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 
                   Buscar
               </button>
@@ -431,7 +417,7 @@
             <label for="resType" class="col-sm-3 control-label">Tipo</label>
             <div class="col-sm-6" data-toggle="popover">
               <select class="selectpicker show-tick form-control" id="selectResolutionType" name="selectResolutionType" >
-                <option title="Seleccione un tipo" data-hidden="true"></option>
+                <option title="Seleccione un tipo"></option>
                 <option ng-repeat="rt in resTypes" value="{{rt.resolutionTypeCode}}">{{rt.resolutionTypeName}}</option>
               </select>
             </div>

@@ -10,7 +10,7 @@
 angular.module('nahuel11App')
 .controller('TitleCtrl', ['$scope', 'dataFactory', 'toasty', function ($scope, dataFactory, toasty) {
 
-  angular.element(document).ready(function () {
+  $(document).ready(function () {
       $(".numeric-input").keydown(function (e) {
         // Allow: backspace, delete, tab, escape, enter and .
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
@@ -28,9 +28,70 @@ angular.module('nahuel11App')
       });
     });
 
+  // Filtering variables
+  $scope.query = ""; 
+  $scope.auSelected = "";
+  $scope.auSelectedSubtree = [];
+  $scope.institution = "";
+  $scope.academicUnit = "";
+  $scope.careerType = "";
+  $scope.career = "";
+  $scope.titleType = "";
+  $scope.resolutionType = "";
+  $scope.titleStateSearch = {1:false,2:false,3:true,4:false,5:false,};
+  $scope.titleSelected = {};
+  $scope.titleClicked = {};
+
   $scope.searchOnEnter = function(keyEvent){
-    if (keyEvent.which === 13)
+    if (keyEvent.which === 13){
       $scope.searchTitles();
+    }
+  };
+
+  $scope.buildStringQuery = function(){
+    $scope.query="";
+
+    if (!!$scope.institution){
+      $scope.query += "inst:";
+      $scope.query += $scope.institution +", ";
+    }
+    if(!!$scope.academicUnit){
+      $scope.query += "ua:";
+      $scope.query += $scope.academicUnit +", ";
+    }
+    if(!!$scope.careerType){
+      $scope.query += "tc:";
+      $scope.query += $scope.careerType +", ";
+    }
+    if(!!$scope.career){
+      $scope.query += "c:";
+      $scope.query += $scope.career +", ";
+    }
+    if(!!$scope.titleType){
+      $scope.query += "tt:";
+      $scope.query += $scope.titleType +", ";
+    }
+    if(!!$scope.title){
+      $scope.query += "t:";
+      $scope.query += $scope.title +", ";
+    }
+    if(!!$scope.resolutionNumber){
+      $scope.query += "nr:";
+      $scope.query += $scope.resolutionNumber +", ";
+    }
+    if(!!$scope.resolutionYear){
+      $scope.query += "ar:";
+      $scope.query += $scope.resolutionYear +", ";
+    }
+
+    $scope.resolutionType = $('#searchResolutionType option:selected').val();
+
+    if(!!$scope.resolutionType){
+      $scope.query += "tr:";
+      $scope.query += $scope.resolutionType +", ";
+    }
+
+    $scope.searchTitles();
   };
 
   $scope.clearSearch = function(){
@@ -79,7 +140,6 @@ angular.module('nahuel11App')
 
   $scope.openAddResolutionModal = function(){
     $scope.resolution = {};
-    console.log($scope.resolution);
     $('select[name=selectResolutionType]').val(''); // selecting default option
     $('.selectpicker').selectpicker('refresh'); //refreshing (visually) the selectpickers
     $('#editModal').modal('hide');
@@ -94,7 +154,7 @@ angular.module('nahuel11App')
   $scope.getMissingDataMessage = function(title){
     var message = 
     "<div style=\"padding-top:4px;\">"+
-      "Datos no definidos: "+
+      "Datos no definidos: "+ 
     "</div>"+
     "<ul style="+
       "\"list-style-type: square;"+
@@ -118,19 +178,7 @@ angular.module('nahuel11App')
     message+="</ul>";
     return message;
   }
-  // Filtering variables
-  $scope.query = ""; 
-  $scope.auSelected = "";
-  $scope.auSelectedSubtree = [];
-  $scope.institution = "";
-  $scope.au = "";
-  $scope.ct = "";
-  $scope.career = "";
-  $scope.titleType = "";
-  $scope.resType= "";
-  $scope.titleStateSearch = {1:false,2:false,3:true,4:false,5:false,};
-  $scope.titleSelected = {};
-  $scope.titleClicked = {};
+  
 
   $scope.openEditModal =function(title){
     $scope.titleClicked = title;
@@ -138,7 +186,11 @@ angular.module('nahuel11App')
     $('select[name=selectTitleState]').val(title.state);    // selecting title state
     $('select[name=selectTitleMode]').val(title.titleModeCode); // selecting title mode
     $('select[name=selectTitleType]').val(title.titleTypeCode); // selecting title type
-    $('.selectpicker').selectpicker('refresh'); //refreshing (visually) the selectpickers
+
+    $('#selectTitleState').selectpicker('refresh'); //refreshing (visually) the selectpickers
+    $('#selectTitleMode').selectpicker('refresh'); //refreshing (visually) the selectpickers
+    $('#selectTitleType').selectpicker('refresh'); //refreshing (visually) the selectpickers
+
     dataFactory.getResolutions(title)
       .success(function(data) {
         $scope.resolutions = data;
@@ -187,15 +239,22 @@ angular.module('nahuel11App')
   }
 
   $scope.initSearchPanel = function() {
-    $("#flip").click(function(){
+    //open the search panel when the arrow is clicked
+    $("#flip").click(function(event){
       $("#panel").slideToggle(300);
-      event.stopPropagation();
+      $('select[name=searchResolutionType]').val($scope.resolutionType);
+      $('#searchResolutionType').selectpicker('refresh');
     });
-    $('html').click(function() {
-      $("#panel").slideUp(300);
-    });
-    $('#panel').click(function(event){
-      event.stopPropagation();
+
+    //close the search panel if clicked outside of it
+    $(document).on('click', function(event) {
+      if ($(event.target).closest('.dropdown-menu').length)
+        return;
+
+      if (!$(event.target).closest('#panel').length) { 
+        if (!$(event.target).closest('#flip').length)
+          $("#panel").slideUp(300);
+      }
     });
   };
   
@@ -431,13 +490,13 @@ angular.module('nahuel11App')
     $scope.query = ""; 
     $scope.institution = "";
     $scope.au = "";
-    $scope.ct = "";
+    $scope.careerType = "";
     $scope.career = "";
     $scope.titleType = "";
     $scope.title = "";
-    $scope.resType= {};
-    $scope.resNro = "";
-    $scope.resYear = "";
+    $scope.resolutionType= {};
+    $scope.resolutionNumber = "";
+    $scope.resolutionYear = "";
     $scope.titleStateSearch = {1:false,3:true,4:false,5:false,6:false,};
     dataFactory.getTitles()
     .success(function(data) {
@@ -451,10 +510,66 @@ angular.module('nahuel11App')
   $scope.searchTitles = function () {
     $("#panel").slideUp(300); // Hide the search panel
     //$('#jstree_demo_div').jstree('select_node', 'j1_1') // Select root node on the tree
+    var paramsMapping = {
+      'inst':'institution',
+      'ua':'academicUnit',
+      'tc':'careerType',
+      'c':'career',
+      'tt':'titleType',
+      't':'title',
+      'tr':'resolutionType',
+      'ar':'resolutionYear',
+      'nr':'resolutionNumber'
+    };
+
+   //clear advanced search fields
+    $scope.institution = "";
+    $scope.academicUnit = "";
+    $scope.careerType = "";
+    $scope.career = "";
+    $scope.titleType = "";
+    $scope.title = "";
+    $scope.resolutionYear = "";
+    $scope.resolutionNumber = "";
+    $scope.resolutionType = "";
+    $('select[name=searchResolutionType]').val("");
+
     var searchFilters = {};
-    if(!!$scope.query)
+    var searchParams = $scope.query.split(',');
+
+    // array cleaning, get rid off empty strings
+    for (var i = searchParams.length - 1; i >= 0; i--) {
+      searchParams[i] = searchParams[i].trim();
+      if(!!!searchParams[i]){
+        searchParams.splice(i, 1); //remove the element
+      }
+    };
+
+    //if not an advanced search
+    if (searchParams.length == 1 && (searchParams[0].split(':').length != 2)){
+      searchFilters.contains = searchParams[0];
+    }
+    
+    // else, build the json request
+    else{
+      searchParams.forEach(function(param){
+        // split key and value
+        var key_val = param.split(':');
+        if(key_val.length == 2){
+          var key = paramsMapping[key_val[0].trim()];
+          var val = key_val[1];
+          //if is a valid key, add it to the req
+          if(!!key){
+            searchFilters[key] = val;
+            $scope[key] = val; //updating advanced search field
+          }
+        }
+      });
+    }
+    console.log("Request: ", searchFilters);
+    /*if(!!$scope.query)
       searchFilters.contains = $scope.query;
-    /*if(!!$scope.institution)
+    if(!!$scope.institution)
       searchFilters.institution = $scope.institution;
     if(!!$scope.au)
       searchFilters.academicUnit = $scope.au;
@@ -466,17 +581,18 @@ angular.module('nahuel11App')
       searchFilters.titleType = $scope.titleType;
     if(!!$scope.title)
       searchFilters.title = $scope.title;
-    if(!!$scope.resType)
-      searchFilters.resolutionType = $scope.resType.resolutionTypeName;
-    if(!!$scope.resNro)
-      searchFilters.resolutionNumber = $scope.resNro;
-    if(!!$scope.resYear)
-      searchFilters.resolutionYear = $scope.resYear;
+    if(!!$scope.resolutionType)
+      searchFilters.resolutionType = $scope.resolutionType.resolutionTypeName;
+    if(!!$scope.resolutionNumber)
+      searchFilters.resolutionNumber = $scope.resolutionNumber;
+    if(!!$scope.resolutionYear)
+      searchFilters.resolutionYear = $scope.resolutionYear;
     searchFilters.titleStates = $scope.titleStateSearch;
 */
     dataFactory.getTitles(searchFilters)
     .success(function(data) {
       $scope.titleTable = data;
+      console.log("Resultados: " + $scope.titleTable.length);
     })
     .error(function (error){
       console.log("Unable to load titles data." + error.message);
