@@ -96,19 +96,18 @@
          <div class="form-group form-group-sm">
             <label class="col-sm-3 control-label">Estado del Título:</label>
             <div class="col-sm-8">
-              <select class="selectpicker form-control" multiple data-selected-text-format="Cualquier estado>4" id="searchTitleState" name="searchTitleState">
+              <select class="selectpicker form-control" multiple id="searchTitleState" name="searchTitleState" title="Todos los estados">
                 <optgroup label="Título Pendiente">
-                  <option value="1" title="Pend de Alta">Pendiente de Alta</option>
-                  <option value="2" title="Pend de Modif">Pendiente de Modificación</option>
+                  <option value="1" title="Pend de Alta" data-subtext="(1)">Pendiente de Alta</option>
+                  <option value="2" title="Pend de Modif" data-subtext="(2)">Pendiente de Modificación</option>
                 </optgroup>
                 <optgroup label="Vigente">
-                  <option value="3" title="Vigente">Título Vigente</option>
+                  <option value="3" title="Vigente" data-subtext="(3)">Título Vigente</option>
                 </optgroup>
                 <optgroup label="Título No Vigente">
-                  <option value="5" title="No Vigente Act">Con Actividad</option>
-                  <option value="4" title="No Vigente Inact">Sin Actividad</option>
+                  <option value="4" title="No Vigente Inact" data-subtext="(4)">Sin Actividad</option>
+                  <option value="5" title="No Vigente Act" data-subtext="(5)">Con Actividad</option>
                 </optgroup>
-                <option title="No Definido" data-hidden="true"></option>
               </select>
             </div>
          </div>

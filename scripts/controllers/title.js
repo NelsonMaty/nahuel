@@ -38,7 +38,7 @@ angular.module('nahuel11App')
   $scope.career = "";
   $scope.titleType = "";
   $scope.resolutionType = "";
-  $scope.titleStateSearch = {1:false,2:false,3:true,4:false,5:false,};
+  $scope.titleStates = [];
   $scope.titleSelected = {};
   $scope.titleClicked = {};
 
@@ -50,45 +50,53 @@ angular.module('nahuel11App')
 
   $scope.buildStringQuery = function(){
     $scope.query="";
+    $scope.resolutionType = $('#searchResolutionType option:selected').val();
+    $scope.titleStates = $('#searchTitleState').val();
 
     if (!!$scope.institution){
-      $scope.query += "inst:";
+      $scope.query += "institución:";
       $scope.query += $scope.institution +", ";
     }
     if(!!$scope.academicUnit){
-      $scope.query += "ua:";
+      $scope.query += "unidad académica:";
       $scope.query += $scope.academicUnit +", ";
     }
     if(!!$scope.careerType){
-      $scope.query += "tc:";
+      $scope.query += "tipo de carrera:";
       $scope.query += $scope.careerType +", ";
     }
     if(!!$scope.career){
-      $scope.query += "c:";
+      $scope.query += "carrera:";
       $scope.query += $scope.career +", ";
     }
     if(!!$scope.titleType){
-      $scope.query += "tt:";
+      $scope.query += "tipo de título:";
       $scope.query += $scope.titleType +", ";
     }
     if(!!$scope.title){
-      $scope.query += "t:";
+      $scope.query += "título:";
       $scope.query += $scope.title +", ";
     }
+    if(!!$scope.resolutionType){
+      $scope.query += "tipo de resolución:";
+      $scope.query += $scope.resolutionType +", ";
+    }
     if(!!$scope.resolutionNumber){
-      $scope.query += "nr:";
+      $scope.query += "número de resolución:";
       $scope.query += $scope.resolutionNumber +", ";
     }
     if(!!$scope.resolutionYear){
-      $scope.query += "ar:";
+      $scope.query += "año de resolución:";
       $scope.query += $scope.resolutionYear +", ";
     }
-
-    $scope.resolutionType = $('#searchResolutionType option:selected').val();
-
-    if(!!$scope.resolutionType){
-      $scope.query += "tr:";
-      $scope.query += $scope.resolutionType +", ";
+    if(!!$scope.titleStates){
+      $scope.query += "estados:";
+      $scope.titleStates.forEach(
+        function(stateCode){
+          $scope.query += " " + stateCode;
+        }
+      );
+      $scope.query += ",";
     }
 
     $scope.searchTitles();
@@ -178,7 +186,6 @@ angular.module('nahuel11App')
     message+="</ul>";
     return message;
   }
-  
 
   $scope.openEditModal =function(title){
     $scope.titleClicked = title;
@@ -242,8 +249,13 @@ angular.module('nahuel11App')
     //open the search panel when the arrow is clicked
     $("#flip").click(function(event){
       $("#panel").slideToggle(300);
+
       $('select[name=searchResolutionType]').val($scope.resolutionType);
       $('#searchResolutionType').selectpicker('refresh');
+      
+      $('select[name=searchTitleState]').val($scope.titleStates);
+      $('#searchTitleState').selectpicker('refresh');
+
     });
 
     //close the search panel if clicked outside of it
@@ -497,7 +509,10 @@ angular.module('nahuel11App')
     $scope.resolutionType= {};
     $scope.resolutionNumber = "";
     $scope.resolutionYear = "";
-    $scope.titleStateSearch = {1:false,3:true,4:false,5:false,6:false,};
+    $scope.resolutionType = "";
+    $('select[name=searchResolutionType]').val($scope.resolutionType);
+
+    $scope.titleStates = [];
     dataFactory.getTitles()
     .success(function(data) {
       $scope.titleTable = data;
@@ -511,15 +526,16 @@ angular.module('nahuel11App')
     $("#panel").slideUp(300); // Hide the search panel
     //$('#jstree_demo_div').jstree('select_node', 'j1_1') // Select root node on the tree
     var paramsMapping = {
-      'inst':'institution',
-      'ua':'academicUnit',
-      'tc':'careerType',
-      'c':'career',
-      'tt':'titleType',
-      't':'title',
-      'tr':'resolutionType',
-      'ar':'resolutionYear',
-      'nr':'resolutionNumber'
+      'institución':'institution',
+      'unidad académica':'academicUnit',
+      'tipo de carrera':'careerType',
+      'carrera':'career',
+      'tipo de título':'titleType',
+      'título':'title',
+      'tipo de resolución':'resolutionType',
+      'año de resolución':'resolutionYear',
+      'número de resolución':'resolutionNumber',
+      'estados':'titleStates'
     };
 
    //clear advanced search fields
@@ -532,7 +548,7 @@ angular.module('nahuel11App')
     $scope.resolutionYear = "";
     $scope.resolutionNumber = "";
     $scope.resolutionType = "";
-    $('select[name=searchResolutionType]').val("");
+    $scope.titleStates = "";
 
     var searchFilters = {};
     var searchParams = $scope.query.split(',');
@@ -566,29 +582,17 @@ angular.module('nahuel11App')
         }
       });
     }
+
+    //special case, title states selector
+    $scope.titleStates = $scope.titleStates.trim().split(/\s+/);
+    console.log($scope.titleStates.length);
+    if(!!$scope.titleStates.length){
+      $('select[name=searchTitleState').val($scope.titleStates);
+    }
+    $('select[name=searchResolutionType]').val($scope.resolutionType);
+
     console.log("Request: ", searchFilters);
-    /*if(!!$scope.query)
-      searchFilters.contains = $scope.query;
-    if(!!$scope.institution)
-      searchFilters.institution = $scope.institution;
-    if(!!$scope.au)
-      searchFilters.academicUnit = $scope.au;
-    if(!!$scope.ct)
-      searchFilters.careerType = $scope.ct;
-    if(!!$scope.career)
-      searchFilters.career = $scope.career;
-    if(!!$scope.titleType)
-      searchFilters.titleType = $scope.titleType;
-    if(!!$scope.title)
-      searchFilters.title = $scope.title;
-    if(!!$scope.resolutionType)
-      searchFilters.resolutionType = $scope.resolutionType.resolutionTypeName;
-    if(!!$scope.resolutionNumber)
-      searchFilters.resolutionNumber = $scope.resolutionNumber;
-    if(!!$scope.resolutionYear)
-      searchFilters.resolutionYear = $scope.resolutionYear;
-    searchFilters.titleStates = $scope.titleStateSearch;
-*/
+
     dataFactory.getTitles(searchFilters)
     .success(function(data) {
       $scope.titleTable = data;
