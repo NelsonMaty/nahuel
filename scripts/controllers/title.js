@@ -32,8 +32,6 @@ angular.module('nahuel11App')
   $scope.query = ""; 
   $scope.auSelected = "";
   $scope.auSelectedSubtree = [];
-  $scope.institution = "";
-  $scope.academicUnit = "";
   $scope.careerType = "";
   $scope.career = "";
   $scope.titleType = "";
@@ -53,41 +51,33 @@ angular.module('nahuel11App')
     $scope.resolutionType = $('#searchResolutionType option:selected').val();
     $scope.titleStates = $('#searchTitleState').val();
 
-    if (!!$scope.institution){
-      $scope.query += "institución:";
-      $scope.query += $scope.institution +", ";
-    }
-    if(!!$scope.academicUnit){
-      $scope.query += "unidad académica:";
-      $scope.query += $scope.academicUnit +", ";
-    }
     if(!!$scope.careerType){
       $scope.query += "tipo de carrera:";
-      $scope.query += $scope.careerType +", ";
+      $scope.query += $scope.careerType +"; ";
     }
     if(!!$scope.career){
       $scope.query += "carrera:";
-      $scope.query += $scope.career +", ";
+      $scope.query += $scope.career +"; ";
     }
     if(!!$scope.titleType){
       $scope.query += "tipo de título:";
-      $scope.query += $scope.titleType +", ";
+      $scope.query += $scope.titleType +"; ";
     }
     if(!!$scope.title){
       $scope.query += "título:";
-      $scope.query += $scope.title +", ";
+      $scope.query += $scope.title +"; ";
     }
     if(!!$scope.resolutionType){
       $scope.query += "tipo de resolución:";
-      $scope.query += $scope.resolutionType +", ";
+      $scope.query += $scope.resolutionType +"; ";
     }
     if(!!$scope.resolutionNumber){
       $scope.query += "número de resolución:";
-      $scope.query += $scope.resolutionNumber +", ";
+      $scope.query += $scope.resolutionNumber +"; ";
     }
     if(!!$scope.resolutionYear){
       $scope.query += "año de resolución:";
-      $scope.query += $scope.resolutionYear +", ";
+      $scope.query += $scope.resolutionYear +"; ";
     }
     if(!!$scope.titleStates){
       $scope.query += "estados:";
@@ -96,7 +86,7 @@ angular.module('nahuel11App')
           $scope.query += " " + stateCode;
         }
       );
-      $scope.query += ",";
+      $scope.query += ";";
     }
 
     $scope.searchTitles();
@@ -212,23 +202,10 @@ angular.module('nahuel11App')
     $('#editModal').modal('show');
   };
 
-  // Table filter by node selection
-  $scope.criteriaMatch = function() {
-    return function(item) {
-      if ($scope.auSelected == "")
-        return true; // No academic unit selected
-      var index = $scope.auSelectedSubtree.indexOf(item.careerName);
-      if (index == -1){
-        return false;
-      }
-      return true;
-    }
-  };
-
   //splitter initializer
   $scope.initSplitter = function(){
     $('#mainSplitter').jqxSplitter({ width: "100%", height: "87.5%", 
-        panels: [{ size:  "17.7%)"}]});
+        panels: [{ size:  "17.7%"}]});
   };
 
   $scope.countState = function(stateValue) {
@@ -255,7 +232,6 @@ angular.module('nahuel11App')
       
       $('select[name=searchTitleState]').val($scope.titleStates);
       $('#searchTitleState').selectpicker('refresh');
-
     });
 
     //close the search panel if clicked outside of it
@@ -272,7 +248,7 @@ angular.module('nahuel11App')
   
   $scope.initClosePanelButton = function() {
     $(".search-widget .close").click(function(){
-      $("#panel").slideToggle(300);
+      $("#panel").slideUp(300);
     });
   };
 
@@ -281,10 +257,13 @@ angular.module('nahuel11App')
     -----------------------------------------*/
 
   //function used to explore a node (and all its children recursively)
-  $scope.traverseNode = function(node){
+  $scope.formatNode = function(node){
 
     node["text"] = node.name;     //renaming the "name" key
     delete node.name;
+
+    node["data"] = node.code;     // Only au's have a code, otherwise it will be null
+    delete node.code;
 
     node["icon"] = "fa fa-university"; //adding icon to the node
 
@@ -300,7 +279,7 @@ angular.module('nahuel11App')
 
     node.children.forEach(
       function(child){
-        $scope.traverseNode(child);
+        $scope.formatNode(child);
       });
   }
 
@@ -309,29 +288,16 @@ angular.module('nahuel11App')
   $scope.jsTreeFormatter = function(tree){
     tree.forEach(
       function(node){
-        $scope.traverseNode(node);
+        $scope.formatNode(node);
       });
     return;
-  };
-
-  // builds an array of titles (leaves)
-  $scope.buildSubtreeArray = function (node){
-    //base case: leaf node
-    if (node.children.length == 0){ 
-      $scope.auSelectedSubtree.push(node.text); 
-      return;
-    }
-    node.children.forEach(function(entry){
-      $scope.buildSubtreeArray(
-        $('#jstree_demo_div').jstree(true).get_node('#'+entry+''));
-    });
   };
 
   // tree component initializer
   $scope.initTree = function(){
   $('#jstree_demo_div').jstree({
-    "plugins" : ["contextmenu"],
-    "contextmenu": {
+     "plugins" : [ "wholerow" ],
+    /*"contextmenu": {
       "items": function ($node) {
           return {
               "Create": {
@@ -354,7 +320,7 @@ angular.module('nahuel11App')
               }
           };
       }
-    },
+    },*/
     "core" : {
       "multiple" : false, // multiple nodes selection not allowed.
       "check_callback": true,
@@ -372,13 +338,23 @@ angular.module('nahuel11App')
     $('#jstree_demo_div').on("changed.jstree", function (e, data) {
       $scope.$apply(function(){
         if (data.node.parent != "#"){
-          $scope.auSelected = data.node.text;
-          $scope.auSelectedSubtree = [];
-          $scope.buildSubtreeArray(data.node);
+          $scope.auSelected = data;
+          if(!!data.node.data){ // if it is an academic unit
+            var auStringPosition = $scope.query.indexOf("unidad académica:");
+            if(auStringPosition<0) // if not already filtered by academic unit
+              $scope.query += "unidad académica: " + data.node.text +";";
+            else{
+              $scope.query = 
+                $scope.query.slice(0, $scope.query.indexOf(":", auStringPosition)+1) 
+                + " " + data.node.text +
+                $scope.query.slice($scope.query.indexOf(";", auStringPosition), $scope.query.length) ;
+            }
+          }
+          else{
+            $scope.query += "carrera: " + data.node.text +";";
+          }
         }
-        else{
-          $scope.auSelectedSubtree = [];
-          $scope.auSelected = "";
+        else{ // root node selected
         }
       });
     });
@@ -408,30 +384,6 @@ angular.module('nahuel11App')
     dataFactory.getTitles()
       .success(function(data) {
         $scope.titleTable = data;
-      })
-      .error(function (error){
-        console.log("Unable to load titles data." + error.message);
-      });
-  }
-
-  $scope.institutions = [];
-  getInstitutions();
-  function getInstitutions() {
-    dataFactory.getInstitutions()
-      .success(function(data) {
-        $scope.institutions = data;
-      })
-      .error(function (error){
-        console.log("Unable to load titles data." + error.message);
-      });
-  }
-
-  $scope.aus = [];
-  getAcademicUnits();
-  function getAcademicUnits() {
-    dataFactory.getAcademicUnits()
-      .success(function(data) {
-        $scope.aus = data;
       })
       .error(function (error){
         console.log("Unable to load titles data." + error.message);
@@ -500,8 +452,6 @@ angular.module('nahuel11App')
 
   $scope.cleanSearchFields = function () {
     $scope.query = ""; 
-    $scope.institution = "";
-    $scope.au = "";
     $scope.careerType = "";
     $scope.career = "";
     $scope.titleType = "";
@@ -539,8 +489,6 @@ angular.module('nahuel11App')
     };
 
    //clear advanced search fields
-    $scope.institution = "";
-    $scope.academicUnit = "";
     $scope.careerType = "";
     $scope.career = "";
     $scope.titleType = "";
@@ -551,7 +499,7 @@ angular.module('nahuel11App')
     $scope.titleStates = "";
 
     var searchFilters = {};
-    var searchParams = $scope.query.split(',');
+    var searchParams = $scope.query.split(';');
 
     // array cleaning, get rid off empty strings
     for (var i = searchParams.length - 1; i >= 0; i--) {
