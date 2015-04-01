@@ -184,9 +184,10 @@ angular.module('nahuel11App')
     $('select[name=selectTitleMode]').val(title.titleModeCode); // selecting title mode
     $('select[name=selectTitleType]').val(title.titleTypeCode); // selecting title type
 
-    $('#selectTitleState').selectpicker('refresh'); //refreshing (visually) the selectpickers
-    $('#selectTitleMode').selectpicker('refresh'); //refreshing (visually) the selectpickers
-    $('#selectTitleType').selectpicker('refresh'); //refreshing (visually) the selectpickers
+    //refreshing (visually) the selectpickers
+    $('#selectTitleState').selectpicker('refresh');
+    $('#selectTitleMode').selectpicker('refresh');
+    $('#selectTitleType').selectpicker('refresh');
 
     dataFactory.getResolutions(title)
       .success(function(data) {
@@ -349,6 +350,17 @@ angular.module('nahuel11App')
                 + " " + data.node.text +
                 $scope.query.slice($scope.query.indexOf(";", auStringPosition), $scope.query.length) ;
             }
+            var searchRequest = {}; // $("#jstree_demo_div").jstree("close_all");
+            searchRequest.academicUnitCode = data.node.data;
+            console.log(searchRequest);
+            dataFactory.getTitles(searchRequest)
+              .success(function(data) {
+                $scope.titleTable = data;
+                console.log("Resultados: " + $scope.titleTable.length);
+              })
+              .error(function (error){
+                console.log("Unable to load titles data." + error.message);
+              });
           }
           else{
             $scope.query += "carrera: " + data.node.text +";";
@@ -556,7 +568,7 @@ angular.module('nahuel11App')
     $scope.titleSelected.titleType = $('#selectTitleType option:selected').val();  //reading type value
     $scope.titleSelected.titleMode = $('#selectTitleMode option:selected').val();  //reading mode value
 
-    if(!$scope.titleSelected.state ){
+    if(!$scope.titleSelected.state){
       toasty.pop.warning({
         title: 'Dato Faltante',
         msg: 'Debe seleccionar un estado actual para el título',
