@@ -94,6 +94,9 @@ angular.module('nahuel11App')
 
   $scope.clearSearch = function(){
     $scope.query = "";
+    //reseting tree position
+    //$("#jstree_demo_div").jstree("close_all");
+    //$("#jstree_demo_div").jstree("open_node", 'j1_1', false, false); //no animation
     $scope.searchTitles();
   };
 
@@ -294,6 +297,17 @@ angular.module('nahuel11App')
     return;
   };
 
+  $scope.safeApply = function(fn) {
+    var phase = this.$root.$$phase;
+    if(phase == '$apply' || phase == '$digest') {
+      if(fn && (typeof(fn) === 'function')) {
+        fn();
+      }
+    } else {
+      this.$apply(fn);
+    }
+  };
+
   // tree component initializer
   $scope.initTree = function(){
   $('#jstree_demo_div').jstree({
@@ -336,8 +350,8 @@ angular.module('nahuel11App')
     }
   });
    // Click listener
-    $('#jstree_demo_div').on("changed.jstree", function (e, data) {
-      $scope.$apply(function(){
+    $('#jstree_demo_div').on("select_node.jstree", function (e, data) {
+      $scope.safeApply(function(){
         if (data.node.parent != "#"){
           $scope.auSelected = data;
           if(!!data.node.data){ // if it is an academic unit
@@ -350,7 +364,7 @@ angular.module('nahuel11App')
                 + " " + data.node.text +
                 $scope.query.slice($scope.query.indexOf(";", auStringPosition), $scope.query.length) ;
             }
-            var searchRequest = {}; // $("#jstree_demo_div").jstree("close_all");
+            var searchRequest = {};
             searchRequest.academicUnitCode = data.node.data;
             console.log(searchRequest);
             dataFactory.getTitles(searchRequest)
@@ -509,6 +523,7 @@ angular.module('nahuel11App')
     $scope.resolutionNumber = "";
     $scope.resolutionType = "";
     $scope.titleStates = "";
+    $scope.academicUnit = "";
 
     var searchFilters = {};
     var searchParams = $scope.query.split(';');
@@ -541,7 +556,15 @@ angular.module('nahuel11App')
           }
         }
       });
+
+      //special case, if no academicUnit is present then reset the tree selection
+      if(!$scope.academicUnit){
+        $("#jstree_demo_div").jstree("deselect_node", $("#jstree_demo_div").jstree("get_selected")[0]); // deselect current node
+        $("#jstree_demo_div").jstree("select_node", 'j1_1');
+      }
     }
+
+
 
     //special case, title states selector
     $scope.titleStates = $scope.titleStates.trim().split(/\s+/);
