@@ -9,8 +9,8 @@
   <!-- Input search text -->
   <div class="col-md-6">
     <div class="fake-input">
-      <input type="text" class="no-input-style search-box" ng-model="query" class="search-box"
-        ng-keypress="searchOnEnter($event)">
+      <input id="inputSearchText" type="text" class="no-input-style search-box" ng-model="query" class="search-box"
+        ng-keypress="searchOnEnter($event)" autofocus>
       <div>
         <i class="fa fa-caret-down advanced-search-button" id="flip" ng-init="initSearchPanel()"
            tooltip="Búsqueda avanzada"
@@ -43,27 +43,35 @@
       <!-- Search form -->
       <form class="form-horizontal" role="form" style="margin-top: 12px;font-size: 13px;zoom:0.9;">
          <div class="form-group form-group-sm">
-            <label for="C" class="col-sm-3 control-label">Tipo de Carrera:</label>
-            <div class="col-sm-8">
-               <input class="form-control input-sm" id="C" ng-model="careerType" typeahead="ct.careerTypeName for ct in cts | filter:$viewValue | limitTo:8">
-            </div>
-         </div>
-         <div class="form-group form-group-sm">
             <label for="D" class="col-sm-3 control-label">Carrera:</label>
             <div class="col-sm-8">
                <input class="form-control input-sm" id="D" ng-model="career" typeahead="c.careerName for c in careers | filter:$viewValue | limitTo:8">
             </div>
          </div>
          <div class="form-group form-group-sm">
-            <label for="E" class="col-sm-3 control-label">Tipo de Título:</label>
+            <label for="C" class="col-sm-3 control-label">Tipo de Carrera:</label>
             <div class="col-sm-8">
-               <input class="form-control input-sm" id="E" ng-model="titleType" typeahead="tt.titleTypeName for tt in ttypes | filter:$viewValue | limitTo:8">
+              <!--<input class="form-control input-sm" id="C" ng-model="careerType" typeahead="ct.careerTypeName for ct in cts | filter:$viewValue | limitTo:8">-->
+              <select class="selectpicker show-tick form-control" id="searchCareerType" name="searchCareerType">
+                <option value="" data-hidden="true"> </option> 
+                <option ng-repeat="ct in cts" value="{{ct.careerTypeName}}">{{ct.careerTypeName}}</option>
+              </select>
             </div>
          </div>
          <div class="form-group form-group-sm">
             <label for="F" class="col-sm-3 control-label">Título:</label>
             <div class="col-sm-8">
                <input class="form-control input-sm" id="F" ng-model="title" typeahead="t.titleName for t in titleTable | filter:$viewValue | limitTo:8">
+            </div>
+         </div>
+         <div class="form-group form-group-sm">
+            <label for="E" class="col-sm-3 control-label">Tipo de Título:</label>
+            <div class="col-sm-8">
+               <!--<input class="form-control input-sm" id="E" ng-model="titleType" typeahead="tt.titleTypeName for tt in ttypes | filter:$viewValue | limitTo:8">-->
+               <select class="selectpicker show-tick form-control" id="searchTitleType" name="searchTitleType">
+                <option value="" data-hidden="true"> </option> 
+                <option ng-repeat="tt in ttypes" value="{{tt.titleTypeName}}">{{tt.titleTypeName}}</option>
+              </select>
             </div>
          </div>
          <div class="form-group form-group-sm">
@@ -125,7 +133,7 @@
   <!--<span class="badge">Resultados 40 </span>-->
 </div>
 
-<div id="mainSplitter" style="border:0; clear:both; position: fixed;bottom: 0; top: 10.5%;width: 100%;height:100%!important">
+<div id="mainSplitter" style="border:0; clear:both; position: fixed;bottom: 0; top: 10.5%;width: 100%">
   <!-- TITLE TREE -->
   <div class="splitter-panel col-md-2" id="jstree_demo_div" style="overflow: auto; font-size:10pt; padding-left: 0px;font-size: 11px;">
   </div>
@@ -363,7 +371,7 @@
                 <div class="resolution" ng-repeat="resolution in resolutions">
                     <i class="fa fa-file-pdf-o resolution-thumbnail" ></i>
                     <span> {{resolution.resolutionTypeName}} </span>
-                    <span>{{resolution.resolutionNumber}} ({{resolution.resolutionYear}})</span>
+                    <span>{{resolution.resolutionNumber}} / {{resolution.resolutionYear}}</span>
                 </div>
                 <div class="resolution add-resolution" ng-click="openAddResolutionModal()">
                   <i class="fa fa-plus-square-o"></i>
