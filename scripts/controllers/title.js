@@ -39,6 +39,8 @@ angular.module('nahuel11App')
   $scope.titleSelected = {};
   $scope.titleClicked = {};
 
+  $scope.showResultText = false;
+
   $scope.searchOnEnter = function(keyEvent){
     if (keyEvent.which === 13){
       $scope.searchTitles();
@@ -53,36 +55,41 @@ angular.module('nahuel11App')
 
     $scope.titleStates = $('#searchTitleState').val();
 
+    if(!!$scope.academicUnitCode){
+      $scope.query += "unidad académica: ";
+      $scope.query += $scope.academicUnit +"; ";
+    }
+
     if(!!$scope.careerType){
-      $scope.query += "tipo de carrera:";
+      $scope.query += "tipo de carrera: ";
       $scope.query += $scope.careerType +"; ";
     }
     if(!!$scope.career){
-      $scope.query += "carrera:";
+      $scope.query += "carrera: ";
       $scope.query += $scope.career +"; ";
     }
     if(!!$scope.titleType){
-      $scope.query += "tipo de título:";
+      $scope.query += "tipo de título: ";
       $scope.query += $scope.titleType +"; ";
     }
     if(!!$scope.title){
-      $scope.query += "título:";
+      $scope.query += "título: ";
       $scope.query += $scope.title +"; ";
     }
     if(!!$scope.resolutionType){
-      $scope.query += "tipo de resolución:";
+      $scope.query += "tipo de resolución: ";
       $scope.query += $scope.resolutionType +"; ";
     }
     if(!!$scope.resolutionNumber){
-      $scope.query += "número de resolución:";
+      $scope.query += "número de resolución: ";
       $scope.query += $scope.resolutionNumber +"; ";
     }
     if(!!$scope.resolutionYear){
-      $scope.query += "año de resolución:";
+      $scope.query += "año de resolución: ";
       $scope.query += $scope.resolutionYear +"; ";
     }
     if(!!$scope.titleStates){
-      $scope.query += "estados:";
+      $scope.query += "estados: ";
       $scope.titleStates.forEach(
         function(stateCode){
           $scope.query += " " + stateCode;
@@ -96,6 +103,8 @@ angular.module('nahuel11App')
 
   $scope.clearSearch = function(){
     $scope.query = ""; //clear the text
+    $scope.showResultText = false;
+    $scope.academicUnitCode = "";
     $scope.searchTitles(); //get all titles
     document.getElementById("inputSearchText").focus();// make the input ready for typing
   };
@@ -155,7 +164,7 @@ angular.module('nahuel11App')
   $scope.getMissingDataMessage = function(title){
     var message = 
     "<div style=\"padding-top:4px;\">"+
-      "Datos no definidos: "+ 
+      "Información faltante: "+ 
     "</div>"+
     "<ul style="+
       "\"list-style-type: square;"+
@@ -181,6 +190,12 @@ angular.module('nahuel11App')
   }
 
   $scope.openEditModal =function(title){
+
+    //if the advanced search panel is show, do not open the modal.
+    if (window.getComputedStyle($('#panel')[0]).getPropertyValue('display') != "none"){
+      return;
+    }
+
     $scope.titleClicked = title;
     $.extend(true, $scope.titleSelected, title); // creating a 'working copy'
     $('select[name=selectTitleState]').val(title.state);    // selecting title state
@@ -209,7 +224,7 @@ angular.module('nahuel11App')
   //splitter initializer
   $scope.initSplitter = function(){
     $('#mainSplitter').jqxSplitter({ width: "100%", height: "auto", 
-        panels: [{ size:  "17.7%"}]});
+        panels: [{ size:  "20%"}]});
   };
 
   $scope.countState = function(stateValue) {
@@ -361,7 +376,7 @@ angular.module('nahuel11App')
       "check_callback": true,
       "data" : [
         {
-          text : "Todas las carreras",
+          text : "Universidad Nacional de Córdoba",
           state : {opened : true, selected:true},
           icon : "fa fa-th-list",
           children:$scope.hierarchy
@@ -375,6 +390,8 @@ angular.module('nahuel11App')
       //using angular's apply, since jstree is not an angular component.
       $scope.safeApply(function(){ 
 
+        $scope.query = "";
+
         if (data.node.parent == "#"){ //if clicked on root node, clear filters.
           $scope.clearSearch();
           return;
@@ -384,26 +401,19 @@ angular.module('nahuel11App')
 
         // if clicked on an academic unit
         if(!data.node.data.isCareer){ 
+          $scope.academicUnit = data.node.text;
           //checking if not already filtered by academic unit
           var auStringPosition = $scope.query.indexOf("unidad académica:");
           if(auStringPosition<0) 
-            $scope.query = "unidad académica: " + data.node.text +";";
+            $scope.query = "unidad académica: " + $scope.academicUnit +";";
           else{
             $scope.query = 
               $scope.query.slice(0, $scope.query.indexOf(":", auStringPosition)+1) 
-              + " " + data.node.text +
+              + " " + $scope.academicUnit +
               $scope.query.slice($scope.query.indexOf(";", auStringPosition), $scope.query.length) ;
           }
-
-          //checking if already filtered by career
-          // var careerStringPosition = $scope.query.indexOf("carrera:");
-          // if(careerStringPosition>=0){ // clear career filter 
-          //   $scope.query = 
-          //     $scope.query.slice(0, careerStringPosition) + 
-          //     $scope.query.slice($scope.query.indexOf(";", careerStringPosition)+1, $scope.query.length) ;
-          //   $scope.career = "";
-          // }
-
+          $scope.academicUnitCode = data.node.data.code;
+          $scope.career = "";
           searchRequest.academicUnitCode = data.node.data.code;
         }
 
@@ -418,24 +428,24 @@ angular.module('nahuel11App')
               + " " + data.node.text +
               $scope.query.slice($scope.query.indexOf(";", careerStringPosition), $scope.query.length) ;
           }
-
-          //checking if already filtered by academic unit
-          // var auStringPosition = $scope.query.indexOf("unidad académica:");
-          // if(auStringPosition>=0){ // clear au filter 
-          //   $scope.query = 
-          //     $scope.query.slice(0, auStringPosition) + 
-          //     $scope.query.slice($scope.query.indexOf(";", auStringPosition)+1, $scope.query.length) ;
-          // }
-
+          $scope.academicUnitCode = "";
           $scope.career = data.node.text;
           searchRequest.careerCode = data.node.data.code;
         }
+
+        $scope.careerType = "";
+        $scope.titleType = "";
+        $scope.title = "";
+        $scope.resolutionYear = "";
+        $scope.resolutionNumber = "";
+        $scope.resolutionType = "";
+        $scope.titleStates = "";
 
         //requesting titles
         dataFactory.getTitles(searchRequest)
             .success(function(data) {
               $scope.titleTable = data;
-              console.log("Resultados: " + $scope.titleTable.length);
+              $scope.showResultText = true;
             })
             .error(function (error){
               console.log("Unable to load titles data." + error.message);
@@ -557,21 +567,13 @@ angular.module('nahuel11App')
     $('#searchTitleState').selectpicker('refresh');
 
     $scope.titleStates = [];
-    dataFactory.getTitles()
-    .success(function(data) {
-      $scope.titleTable = data;
-    })
-    .error(function (error){
-      console.log("Unable to load titles data." + error.message);
-    });
+
   };
 
   $scope.searchTitles = function () {
-    $("#panel").slideUp(300); // Hide the search panel
-    //$('#jstree_demo_div').jstree('select_node', 'j1_1') // Select root node on the tree
+
     var paramsMapping = {
       'institución':'institution',
-      'unidad académica':'academicUnit',
       'tipo de carrera':'careerType',
       'carrera':'career',
       'tipo de título':'titleType',
@@ -591,8 +593,6 @@ angular.module('nahuel11App')
     $scope.resolutionNumber = "";
     $scope.resolutionType = "";
     $scope.titleStates = "";
-    $scope.academicUnit = "";
-
 
     var searchFilters = {};
     var searchParams = $scope.query.split(';');
@@ -617,7 +617,7 @@ angular.module('nahuel11App')
         var key_val = param.split(':');
         if(key_val.length == 2){
           var key = paramsMapping[key_val[0].trim()];
-          var val = key_val[1];
+          var val = key_val[1].trim();
           //if is a valid key, add it to the req
           if(!!key){
             searchFilters[key] = val;
@@ -626,14 +626,17 @@ angular.module('nahuel11App')
         }
       });
 
-      //special case, if no academicUnit is present then reset the tree selection
-      if(!$scope.academicUnit){
+      // if no academicUnit is present then reset the tree selection
+      if(!!!$scope.academicUnitCode){
         if($("#jstree_demo_div").jstree("get_selected")[0] != 'j1_1'){
           $("#jstree_demo_div").jstree("deselect_node", $("#jstree_demo_div").jstree("get_selected")[0]); // deselect current node
           $("#jstree_demo_div").jstree("select_node", 'j1_1');
           $("#jstree_demo_div").jstree("close_all");
           $("#jstree_demo_div").jstree("open_node", 'j1_1', false, false); //no animation
         }
+      }
+      else{ //there is an academic unit selected. search it by code
+        searchFilters.academicUnitCode = $scope.academicUnitCode;
       }
     }
 
@@ -648,14 +651,19 @@ angular.module('nahuel11App')
     $('select[name=searchResolutionType]').val($scope.resolutionType);
     $('select[name=searchTitleType]').val($scope.titleType);
     $('select[name=searchCareerType]').val($scope.careerType);
-
     dataFactory.getTitles(searchFilters)
     .success(function(data) {
       $scope.titleTable = data;
-      console.log("Resultados: " + $scope.titleTable.length);
+      $("#panel").slideUp(0); // Hide the search panel
+      if($scope.query.trim() != "")
+        $scope.showResultText = true;
+      else
+        $scope.showResultText = false;
     })
     .error(function (error){
       console.log("Unable to load titles data." + error.message);
+      $("#panel").slideUp(0); // Hide the search panel
+
     });
   };
 

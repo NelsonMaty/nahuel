@@ -1,21 +1,15 @@
 <div id="titlePage">
-<!-- LOGO -->
-<div class="col-md-2">
-  <img src="images/nahuelapaizado.jpg" style="width: 80%; display: block; margin: auto;">
-</div>
 
 <!-- SEARCH WIDGET -->
 <div class="search-widget ">
   <!-- Input search text -->
-  <div class="col-md-6">
-    <div class="fake-input">
+  <div class="col-md-12 page-header">
+    <img src="images/nahuelapaizado.gif" style="width: 12%; float: left;margin: 7px 4.4% 7px 3.4%;">
+    <div class="fake-input" style="display: inline-block;">
       <input id="inputSearchText" type="text" class="no-input-style search-box" ng-model="query" class="search-box"
         ng-keypress="searchOnEnter($event)" autofocus>
       <div>
-        <i class="fa fa-caret-down advanced-search-button" id="flip" ng-init="initSearchPanel()"
-           tooltip="Búsqueda avanzada"
-         tooltip-placement="left"
-         tooltip-popup-delay='800'></i>
+        <i class="fa fa-caret-down advanced-search-button" id="flip" ng-init="initSearchPanel()"></i>
          <span class="glyphicon glyphicon-remove clear-search" ng-show="!!query" ng-click="clearSearch()">
         </span>
       </div>
@@ -24,6 +18,12 @@
        ng-click="searchTitles()"
        >
     </i>
+    <div class="resultNumberText" ng-switch on="titleTable.length" ng-if="showResultText">
+      <span ng-switch-when="0"> No se han encontrado resultados </span>
+      <span ng-switch-when="1"> Se ha encontrado 1 resultado </span>
+      <span ng-switch-default> Se han encontrado {{titleTable.length}} resultados </span>
+    </div>
+    <div class="resultNumberText" ng-if="!showResultText" style="margin-left: 54px;"> Cantidad total de títulos: {{titleTable.length}} </div>
   </div>
 
    <!-- Advanced search panel -->
@@ -34,14 +34,14 @@
          <span> Buscar</span>
       </span>
 
-      <!-- Panel close button -->
+      <!-- Panel close button 
       <span class="close" ng-init="initClosePanelButton()">
          <span class="glyphicon glyphicon-remove" style="font-size:9pt;position: relative; top: 0px;">
          </span>
-      </span>
+      </span>-->
 
       <!-- Search form -->
-      <form class="form-horizontal" role="form" style="margin-top: 12px;font-size: 13px;zoom:0.9;">
+      <form class="form-horizontal" role="form" style="margin-top: 12px;font-size: 13px;zoom:0.9; -moz-transform: scale(0.9);-moz-transform-origin: 50% 0px 0px;">
          <div class="form-group form-group-sm">
             <label for="D" class="col-sm-3 control-label">Carrera:</label>
             <div class="col-sm-8">
@@ -111,12 +111,12 @@
          <div class="form-group">
             <div class="col-sm-offset-3 col-sm-8">
               <button type="button" 
-                class="btn btn-info btn-sm pull-right" style="padding: 7px 28px;" ng-click="buildStringQuery()">
+                class="btn btn-info btn-sm pull-right panel-button "  ng-click="buildStringQuery()">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 
                   Buscar
               </button>
               <button type="button" ng-click="cleanSearchFields()"
-                class="btn btn-info btn-sm pull-right be-careful" style="padding: 7px 28px; margin-right: 15px;">
+                class="btn btn-info btn-sm pull-right panel-button " style="margin-right: 15px;">
                 <span class="glyphicon glyphicon-erase" aria-hidden="true"></span> 
                   Limpiar
               </button>
@@ -138,8 +138,12 @@
   <div class="splitter-panel col-md-2" id="jstree_demo_div" style="overflow: auto; font-size:10pt; padding-left: 0px;font-size: 11px;">
   </div>
   <!-- TABLE -->
-  <div class="splitter-panel datagrid col-md-10" ng-init="initSplitter()" style="overflow:auto;">
-     <table >
+  <div class="splitter-panel datagrid col-md-10" ng-init="initSplitter()" style="overflow:auto;" id="tableContainer">
+     <table style="
+      border-width: 2px;
+      border-color: #03A9F4;
+      border-style: solid;
+      border-top-width: 0;" id="table">
         <col style="width:20%">
         <col style="width:8%">
         <col style="width:22%">
@@ -156,7 +160,7 @@
               <th>Nombre de Título</th>
               <th>Tipo de Título</th>
               <th>Modalidad</th>
-              <th> </th>
+              <th> </th> <!-- header for the 'warning' symbol -->
            </tr>
         </thead>
         <tbody>
@@ -172,13 +176,16 @@
               <td> 
                 <span ng-if="isMissingData(t)"
                 class="glyphicon glyphicon-warning-sign" aria-hidden="true" 
-                style="color:red; font-size:10pt"
+                style="color:#F44336; font-size:10pt"
                 tooltip-html-unsafe="{{getMissingDataMessage(t)}}" tooltip-placement="left">
                 </span>
               </td>
-           </tr>  
+        </tr> 
         </tbody>
      </table>
+     <a href="http://www.unc.edu.ar/" target="_blank">
+       <img src="images/unc3_a.jpg" class="fixed-watermark-logo">
+     </a>
   </div>
 </div>
 <!-- CREATION MODAL 
@@ -309,7 +316,7 @@
         <span class="modal-title" id="myModalLabel" style="font-weight: bold;">Edición de Título</span>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal" ng-submit="saveTitleChanges()" style="margin-bottom:0">
+        <form class="form-horizontal" ng-submit="saveTitleChanges()" style="margin-bottom:0; color: #3D3D3D;">
           <div class="form-group required">
             <label for="titleCodeInput" class="col-sm-2 control-label">Código ONA</label>
             <div class="col-sm-2">
@@ -346,6 +353,13 @@
               <option title="No Definido" data-hidden="true"></option>
               </select>
             </div>
+            <label class="col-sm-1 control-label" for="radios-cg" style="margin-left: 16px;"> Cogestión </label> 
+            <div class="col-sm-2" style="padding-top: 7px;">
+              <input type="radio" name="radios-cg" id="cg-0" ng-value="false" ng-model="titleSelected.titleCG" style="margin-left: 8px;" required>
+              No
+              <input type="radio" name="radios-cg" id="cg-1" ng-value="true" ng-model="titleSelected.titleCG" style="margin-left: 8px;" required>
+              Sí
+            </div>
           </div>
           <div class="form-group required">
             <label for="titleTypeCB" class="col-sm-2 control-label">Tipo de título</label>
@@ -369,7 +383,7 @@
             <div class="col-sm-6">
               <div class="resolutions-container">
                 <div class="resolution" ng-repeat="resolution in resolutions">
-                    <i class="fa fa-file-pdf-o resolution-thumbnail" ></i>
+                    <i class="fa fa-file-text-o resolution-thumbnail" ></i>
                     <span> {{resolution.resolutionTypeName}} </span>
                     <span>{{resolution.resolutionNumber}} / {{resolution.resolutionYear}}</span>
                 </div>
@@ -388,10 +402,8 @@
             </div>
           </div>
       <div class="modal-footer" style="padding-bottom:0px">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary" >
-          Guardar Cambios
-        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" style="width:100px"> Cancelar </button>
+        <button type="submit" class="btn btn-default" style="width:100px"> Guardar </button>
       </div>
         </form>
       </div>
@@ -441,7 +453,7 @@
           </div>
           <div class="modal-footer" style="padding-bottom:0px">
             <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelResolution()">Cancelar</button>
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-default">
               Agregar resolución
             </button>
           </div>

@@ -12,7 +12,7 @@ angular
   ])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/', {
+      .when('/titles', {
         templateUrl: 'views/titles.html',
         controller: 'TitleCtrl'
       })
@@ -21,7 +21,7 @@ angular
         controller: 'AboutCtrl'
       })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/titles'
       });
   })
 
