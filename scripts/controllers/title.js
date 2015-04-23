@@ -8,7 +8,22 @@
  * Controller of the nahuel11App
  */
 angular.module('nahuel11App')
-.controller('TitleCtrl', ['$scope', 'dataFactory', 'toasty', function ($scope, dataFactory, toasty) {
+.controller('TitleCtrl', ['$scope', 'dataFactory', 'toasty', '$routeParams', function ($scope, dataFactory, toasty, $routeParams) {
+
+  if (!!$routeParams.titleCode){ // title code provided by url (optional)
+    var titleFilter = {};
+    titleFilter.titleCode = $routeParams.titleCode;
+    dataFactory.getTitles(titleFilter)
+      .success(function(data) {
+        if(data.length == 0)
+          alert("No ha sido posible encontrar el título solicitado.");
+        else
+          $scope.openEditModal(data[0]);
+      })
+      .error(function (error){
+        console.log("Unable to load title data." + error.message);
+    });
+  }
 
   $(document).ready(function () {
       $(".numeric-input").keydown(function (e) {
@@ -197,8 +212,8 @@ angular.module('nahuel11App')
     }
 
     $scope.titleClicked = title;
-    $.extend(true, $scope.titleSelected, title); // creating a 'working copy'
-    $('select[name=selectTitleState]').val(title.state);    // selecting title state
+    $.extend(true, $scope.titleSelected, title);                // creating a 'working copy'
+    $('select[name=selectTitleState]').val(title.state);        // selecting title state
     $('select[name=selectTitleMode]').val(title.titleModeCode); // selecting title mode
     $('select[name=selectTitleType]').val(title.titleTypeCode); // selecting title type
 
@@ -275,12 +290,11 @@ angular.module('nahuel11App')
     });
   };
   
-  $scope.initClosePanelButton = function() {
-    $(".search-widget .close").click(function(){
-      document.getElementById("inputSearchText").focus();// make the input ready for typing
-      $("#panel").slideUp(300);
-    });
-  };
+  // initialize jQuery widgets when the content is loaded
+  $scope.$watch('$viewContentLoaded', function(){
+    $scope.initSearchPanel();
+    $scope.initSplitter();
+  });
 
   /*-----------------------------------------
     - ACADEMCIT UNIT TREE RELATED FUNCTIONS -

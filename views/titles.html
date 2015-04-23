@@ -9,7 +9,7 @@
       <input id="inputSearchText" type="text" class="no-input-style search-box" ng-model="query" class="search-box"
         ng-keypress="searchOnEnter($event)" autofocus>
       <div>
-        <i class="fa fa-caret-down advanced-search-button" id="flip" ng-init="initSearchPanel()"></i>
+        <i class="fa fa-caret-down advanced-search-button" id="flip"></i>
          <span class="glyphicon glyphicon-remove clear-search" ng-show="!!query" ng-click="clearSearch()">
         </span>
       </div>
@@ -24,6 +24,9 @@
       <span ng-switch-default> Se han encontrado {{titleTable.length}} resultados </span>
     </div>
     <div class="resultNumberText" ng-if="!showResultText" style="margin-left: 54px;"> Cantidad total de títulos: {{titleTable.length}} </div>
+    <a href="http://www.unc.edu.ar/" target="_blank">
+      <img src="images/unc3_a.jpg" class="fixed-watermark-logo">
+    </a>
   </div>
 
    <!-- Advanced search panel -->
@@ -33,12 +36,6 @@
          <span class="glyphicon glyphicon-search" style="font-size:9pt"></span>
          <span> Buscar</span>
       </span>
-
-      <!-- Panel close button 
-      <span class="close" ng-init="initClosePanelButton()">
-         <span class="glyphicon glyphicon-remove" style="font-size:9pt;position: relative; top: 0px;">
-         </span>
-      </span>-->
 
       <!-- Search form -->
       <form class="form-horizontal" role="form" style="margin-top: 12px;font-size: 13px;zoom:0.9; -moz-transform: scale(0.9);-moz-transform-origin: 50% 0px 0px;">
@@ -138,7 +135,7 @@
   <div class="splitter-panel col-md-2" id="jstree_demo_div" style="overflow: auto; font-size:10pt; padding-left: 0px;font-size: 11px;">
   </div>
   <!-- TABLE -->
-  <div class="splitter-panel datagrid col-md-10" ng-init="initSplitter()" style="overflow:auto;" id="tableContainer">
+  <div class="splitter-panel datagrid col-md-10" style="overflow:auto;" id="tableContainer"> <!-- here was the initSplitter() -->
      <table style="
       border-width: 2px;
       border-color: #03A9F4;
@@ -183,9 +180,6 @@
         </tr> 
         </tbody>
      </table>
-     <a href="http://www.unc.edu.ar/" target="_blank">
-       <img src="images/unc3_a.jpg" class="fixed-watermark-logo">
-     </a>
   </div>
 </div>
 <!-- CREATION MODAL 

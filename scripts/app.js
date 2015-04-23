@@ -12,7 +12,7 @@ angular
   ])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/titles', {
+      .when('/titles/:titleCode?', { //optional parameter
         templateUrl: 'views/titles.html',
         controller: 'TitleCtrl'
       })
