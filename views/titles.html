@@ -126,10 +126,6 @@
 </div>
 <!-- END: SEARCH WIDGET -->
 
-<div class="col-md-2 col-md-offset-2">
-  <!--<span class="badge">Resultados 40 </span>-->
-</div>
-
 <div id="mainSplitter" style="border:0; clear:both; position: fixed;bottom: 0; top: 10.5%;width: 100%">
   <!-- TITLE TREE -->
   <div class="splitter-panel col-md-2" id="jstree_demo_div" style="overflow: auto; font-size:10pt; padding-left: 0px;font-size: 11px;">
@@ -396,6 +392,8 @@
             </div>
           </div>
       <div class="modal-footer" style="padding-bottom:0px">
+        <button type="button" class="btn btn-default" data-dismiss="modal" style="width: 133px; float: left;margin-left: 4px;"
+          ng-click="openShareLinkModal()"> Compartir vínculo </button>
         <button type="button" class="btn btn-default" data-dismiss="modal" style="width:100px"> Cancelar </button>
         <button type="submit" class="btn btn-default" style="width:100px"> Guardar </button>
       </div>
@@ -446,7 +444,7 @@
             </div>
           </div>
           <div class="modal-footer" style="padding-bottom:0px">
-            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelResolution()">Cancelar</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="showEditModal()">Cancelar</button>
             <button type="submit" class="btn btn-default">
               Agregar resolución
             </button>
@@ -456,6 +454,35 @@
     </div>
   </div>
 </div>
+
+<!-- GET LINK MODAL -->
+<div class="modal fade" id="shareLinkModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog modal-md" style="margin-top: 13%;">
+    <div class="modal-content">
+      <div class="modal-header dotted-overflow">
+        <span class="modal-title" style="font-weight: bold;"> Vínculo a '{{titleSelected.titleName}}'</span>
+      </div>
+      <div class="modal-body">
+        <!-- <form class="form" ng-submit="submitResolution()" style="margin-bottom:0"> -->
+          <div class="form-group" style="width: 70%; margin-left: 15%;">
+            <div style="font-weight: bold;font-size: 11pt;margin-bottom: 10px;"> Vínculo para compartir: </div>
+            <div class="input-group" style="width:100%" >
+              <input readonly="true" id="inputTitleURL" class="form-control" value="{{getTitleURL()}}" style=" background-color: white; cursor: auto;" ng-focus="selectLink()">
+               <span class="input-group-btn" ng-show="isFlashAvailable()">
+                    <button class="btn btn-default copy-btn" type="button"  data-placement="top" title="Copiar">  <span class="fa fa-files-o" aria-hidden="true" style="color: white;"></span> </button>
+               </span>
+            </div>
+            <div style="margin-top: 3px;color: #616161;font-size: 10pt;">Cualquier persona que tenga este vínculo podrá acceeder a la información relacionada al título.</div>
+          </div>
+          <div class="modal-footer" style="padding-bottom:0px">
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="showEditModal()">Volver</button>
+          </div>
+<!--        </form> -->
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 <div ng-controller="toasty-controller">
     <toasty-container toasty-defaults='{"timeout": 3000, "close-button":true}'></toasty-container>

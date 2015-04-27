@@ -10,6 +10,26 @@
 angular.module('nahuel11App')
 .controller('TitleCtrl', ['$scope', 'dataFactory', 'toasty', '$routeParams', function ($scope, dataFactory, toasty, $routeParams) {
 
+  var baseURL = "http://172.16.248.229:9000/#/titles";
+  $scope.getTitleURL = function (){
+    return baseURL + "/" + $scope.titleSelected.titleCode;
+  };
+  $('.copy-btn').tooltip({delay: { "hide": 200}});
+
+  $scope.isFlashAvailable = function (){
+    return ((typeof navigator.plugins != "undefined" && typeof navigator.plugins["Shockwave Flash"] == "object") 
+      || (window.ActiveXObject && (new ActiveXObject("ShockwaveFlash.ShockwaveFlash")) != false));
+  }
+
+  var client = new ZeroClipboard($(".copy-btn"));
+  client.on( "copy", function (event) {
+    var clipboard = event.clipboardData;
+    clipboard.setData( "text/plain", $scope.getTitleURL() );
+  });
+  client.on('aftercopy', function(event) {
+    $('.tooltip .tooltip-inner').text('Copiado');
+  });
+
   if (!!$routeParams.titleCode){ // title code provided by url (optional)
     var titleFilter = {};
     titleFilter.titleCode = $routeParams.titleCode;
@@ -158,9 +178,8 @@ angular.module('nahuel11App')
     $('#addResModal').modal('hide');
   };
 
-  $scope.cancelResolution = function(){
+  $scope.showEditModal = function(){
     $('#editModal').modal('show');
-    $('#addResModal').modal('hide');
   };
 
   $scope.openAddResolutionModal = function(){
@@ -169,6 +188,21 @@ angular.module('nahuel11App')
     $('.selectpicker').selectpicker('refresh'); //refreshing (visually) the selectpickers
     $('#editModal').modal('hide');
     $('#addResModal').modal('show');
+  };
+
+  $scope.openShareLinkModal = function(){
+    $('#editModal').modal('hide');
+    $('#shareLinkModal').modal('show');
+  };
+
+  //select the link text after the modal has been shown
+  $('#shareLinkModal').on('shown.bs.modal', function(){
+    $('#inputTitleURL').select();
+    $('#inputTitleURL').focus();
+  });
+
+  $scope.selectLink = function(){
+    $('#inputTitleURL').select();
   };
 
   $scope.isMissingData = function(title){
@@ -206,7 +240,7 @@ angular.module('nahuel11App')
 
   $scope.openEditModal =function(title){
 
-    //if the advanced search panel is show, do not open the modal.
+    //if the advanced search panel is shown, do not open the modal.
     if (window.getComputedStyle($('#panel')[0]).getPropertyValue('display') != "none"){
       return;
     }
@@ -294,6 +328,7 @@ angular.module('nahuel11App')
   $scope.$watch('$viewContentLoaded', function(){
     $scope.initSearchPanel();
     $scope.initSplitter();
+
   });
 
   /*-----------------------------------------
@@ -659,7 +694,7 @@ angular.module('nahuel11App')
     if(!!$scope.titleStates)
       $scope.titleStates = $scope.titleStates.split(/\s+/);
     if(!!$scope.titleStates.length){
-      $('select[name=searchTitleState').val($scope.titleStates);
+      $('select[name=searchTitleState]').val($scope.titleStates);
     }
 
     $('select[name=searchResolutionType]').val($scope.resolutionType);

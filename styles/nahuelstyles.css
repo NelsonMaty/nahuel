@@ -49,7 +49,7 @@ body{
 	font-size: 12px;
 	border-bottom: 1px solid #29B6F6;
 	font-weight: normal; 
-	padding: 8;
+	padding: 8px;
 }
 
 .datagrid table tbody td:first-child { 
@@ -215,7 +215,7 @@ body{
 }
 
 .modal-header{
-	padding: 11px 22px;
+	padding: 11px 16px;
 	border-bottom: 0;
 	background-color: #03A9F4;
 	color: white;
@@ -334,9 +334,10 @@ body{
 	margin: 0;
 	background-color: #f1f1f1;
 	padding-top: 8px;
-	padding-bottom: 8px;
+	padding-bottom: 9px;
 	border-bottom: 1px solid #e5e5e5;
 	height: 10.5%;
+	z-index: 10;
 }
 
 .resultNumberText{
@@ -367,3 +368,26 @@ body{
 .fixed-watermark-logo:hover{
 	opacity: 0.9;
 }
+
+.copy-btn{
+	padding: 6px 12px;
+	background-color: #4FC3F7;
+}
+
+.copy-btn.zeroclipboard-is-hover {
+	background-color: #03A9F4;
+}
+
+.copy-btn.zeroclipboard-is-active {
+	background-color: #039BE5;
+}
+/*
+.jstree-default .jstree-node {
+	margin-left: 15px !important;
+}
+
+.jstree-default .jstree-icon:empty{
+	width: 20px !important;
+}
+
+*/
