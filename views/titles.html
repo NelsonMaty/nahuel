@@ -297,7 +297,120 @@
    </div>
 </div>
 -->
-<!-- EDITION MODAL -->
+
+<!-- TITLE VIEW MODAL -->
+<!-- Modal -->
+<div class="modal fade" id="viewTitleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Información de Título</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="title-attribute pull-right">
+              Título
+              </div>
+          </div> 
+          <div class="col-md-8 title-attribute-value">
+              {{titleSelected.titleName}}
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="title-attribute pull-right">
+              Título Femenino
+            </div>
+          </div> 
+          <div class="col-md-8 title-attribute-value">
+              {{titleSelected.titleFemaleName}}
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="title-attribute pull-right">
+              Institución Educativa
+            </div>
+          </div> 
+          <div class="col-md-8 title-attribute-value">
+            {{titleSelected.institutionName}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="title-attribute pull-right">
+              Unidad Académica
+            </div>
+          </div> 
+          <div class="col-md-8 title-attribute-value">
+              {{titleSelected.academicUnit}}
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="title-attribute pull-right">
+              Carrera
+            </div>
+          </div> 
+          <div class="col-md-8 title-attribute-value">
+              {{titleSelected.careerName}} (Cód. {{titleSelected.titleCode}})
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="title-attribute pull-right">
+              Tipo
+            </div>
+          </div> 
+          <div class="col-md-8 title-attribute-value">
+              {{titleSelected.titleType}}
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="title-attribute pull-right">
+              Modalidad
+              </div>
+          </div> 
+          <div class="col-md-8 title-attribute-value">
+              {{titleSelected.titleMode}}
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="title-attribute pull-right">
+              Estado
+            </div>
+          </div> 
+        <div class="col-md-8 title-attribute-value">
+        <span ng-switch on="titleSelected.state">
+          <span ng-switch-when="1">Pendiente de alta</span>
+          <span ng-switch-when="2">Pendiente de modificación</span>
+          <span ng-switch-when="3">Vigente</span>
+          <span ng-switch-when="4">No vigente sin actividad</span>
+          <span ng-switch-when="5">No vigente con actividad</span>
+          <span ng-switch-default>?</span>
+        </span>
+        </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="title-attribute pull-right">
+              Resolución
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TITLE EDITION MODAL -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -326,7 +439,7 @@
             </div>
           </div>
           <div class="form-group required">
-            <label for="titleStateCB" class="col-sm-2 control-label">Estado actual</label>
+            <label for="titleStateCB" class="col-sm-2 control-label">Estado Actual</label>
             <div class="col-sm-6" id="titleStateCB">
               <select class="selectpicker form-control" id="selectTitleState" name="selectTitleState">
               <optgroup label="Título Pendiente">
@@ -352,7 +465,7 @@
             </div>
           </div>
           <div class="form-group required">
-            <label for="titleTypeCB" class="col-sm-2 control-label">Tipo de título</label>
+            <label for="titleTypeCB" class="col-sm-2 control-label">Tipo de Título</label>
             <div class="col-sm-3">
               <select class="selectpicker show-tick form-control" id="selectTitleType" name="selectTitleType">
                 <option title="No Definido" data-hidden="true"></option>
@@ -379,7 +492,7 @@
                 </div>
                 <div class="resolution add-resolution" ng-click="openAddResolutionModal()">
                   <i class="fa fa-plus-square-o"></i>
-                  <span> Agregar resolución</span>
+                  <span> Agregar Resolución</span>
                 </div>
               </div>
             </div>
@@ -392,8 +505,8 @@
             </div>
           </div>
       <div class="modal-footer" style="padding-bottom:0px">
-        <button type="button" class="btn btn-default" data-dismiss="modal" style="width: 133px; float: left;margin-left: 4px;"
-          ng-click="openShareLinkModal()"> Compartir vínculo </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" style="width: 138px; float: left;margin-left: 4px;"
+          ng-click="openShareLinkModal()"> Compartir Vínculo </button>
         <button type="button" class="btn btn-default" data-dismiss="modal" style="width:100px"> Cancelar </button>
         <button type="submit" class="btn btn-default" style="width:100px"> Guardar </button>
       </div>
@@ -460,10 +573,9 @@
   <div class="modal-dialog modal-md" style="margin-top: 13%;">
     <div class="modal-content">
       <div class="modal-header dotted-overflow">
-        <span class="modal-title" style="font-weight: bold;"> Vínculo a '{{titleSelected.titleName}}'</span>
+        <span class="modal-title" style="font-weight: bold;"> Vínculo a "{{titleSelected.titleName}}"</span>
       </div>
       <div class="modal-body">
-        <!-- <form class="form" ng-submit="submitResolution()" style="margin-bottom:0"> -->
           <div class="form-group" style="width: 70%; margin-left: 15%;">
             <div style="font-weight: bold;font-size: 11pt;margin-bottom: 10px;"> Vínculo para compartir: </div>
             <div class="input-group" style="width:100%" >
@@ -477,7 +589,6 @@
           <div class="modal-footer" style="padding-bottom:0px">
             <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="showEditModal()">Volver</button>
           </div>
-<!--        </form> -->
       </div>
     </div>
   </div>

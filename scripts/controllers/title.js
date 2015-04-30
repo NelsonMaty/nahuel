@@ -10,9 +10,9 @@
 angular.module('nahuel11App')
 .controller('TitleCtrl', ['$scope', 'dataFactory', 'toasty', '$routeParams', function ($scope, dataFactory, toasty, $routeParams) {
 
-  var baseURL = "http://172.16.248.229:9000/#/titles";
+  var baseURL = "http://172.16.248.229:9000/#/titles/";
   $scope.getTitleURL = function (){
-    return baseURL + "/" + $scope.titleSelected.titleCode;
+    return baseURL + $scope.titleSelected.titleCode;
   };
   $('.copy-btn').tooltip({delay: { "hide": 200}});
 
@@ -37,8 +37,10 @@ angular.module('nahuel11App')
       .success(function(data) {
         if(data.length == 0)
           alert("No ha sido posible encontrar el título solicitado.");
-        else
-          $scope.openEditModal(data[0]);
+        else{
+          $('#viewTitleModal').modal('show');
+          $scope.titleSelected = data[0];
+        }
       })
       .error(function (error){
         console.log("Unable to load title data." + error.message);
@@ -124,13 +126,13 @@ angular.module('nahuel11App')
       $scope.query += $scope.resolutionYear +"; ";
     }
     if(!!$scope.titleStates){
-      $scope.query += "estados: ";
+      $scope.query += "estados:";
       $scope.titleStates.forEach(
         function(stateCode){
           $scope.query += " " + stateCode;
         }
       );
-      $scope.query += ";";
+      $scope.query += "; ";
     }
 
     $scope.searchTitles();
