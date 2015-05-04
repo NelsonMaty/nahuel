@@ -10,10 +10,15 @@
 angular.module('nahuel11App')
 .controller('TitleCtrl', ['$scope', 'dataFactory', 'toasty', '$routeParams', function ($scope, dataFactory, toasty, $routeParams) {
 
+  /*-----------------------------------------
+  -             Copy Title URL              -
+  -----------------------------------------*/
   var baseURL = "http://172.16.248.229:9000/#/titles/";
+
   $scope.getTitleURL = function (){
     return baseURL + $scope.titleSelected.titleCode;
   };
+
   $('.copy-btn').tooltip({delay: { "hide": 200}});
 
   $scope.isFlashAvailable = function (){
@@ -30,6 +35,9 @@ angular.module('nahuel11App')
     $('.tooltip .tooltip-inner').text('Copiado');
   });
 
+  /*-----------------------------------------
+  -             Route Title URL              -
+  -----------------------------------------*/
   if (!!$routeParams.titleCode){ // title code provided by url (optional)
     var titleFilter = {};
     titleFilter.titleCode = $routeParams.titleCode;
@@ -38,8 +46,18 @@ angular.module('nahuel11App')
         if(data.length == 0)
           alert("No ha sido posible encontrar el título solicitado.");
         else{
-          $('#viewTitleModal').modal('show');
-          $scope.titleSelected = data[0];
+          dataFactory.getResolutions(data[0])
+            .success(function(resolutions){
+              for (var i = 0; i < resolutions.length; i++) {
+                resolutions[i].resolutionTypeName = resolutions[i].resolutionTypeName.replace(/resolución/ig, '');
+              };
+              $scope.resolutions = resolutions;
+              $scope.titleSelected = data[0];
+              $('#viewTitleModal').modal('show');
+            })
+            .error(function (error){
+              console.log("Unable to load title data." + error.message);
+            });
         }
       })
       .error(function (error){
@@ -47,6 +65,9 @@ angular.module('nahuel11App')
     });
   }
 
+  /*-----------------------------------------
+  -          Key events handling            -
+  -----------------------------------------*/
   $(document).ready(function () {
       $(".numeric-input").keydown(function (e) {
         // Allow: backspace, delete, tab, escape, enter and .
@@ -65,6 +86,14 @@ angular.module('nahuel11App')
       });
     });
 
+  $scope.searchOnEnter = function(keyEvent){
+    if (keyEvent.which === 13){
+      $scope.searchTitles();
+    }
+  };
+
+
+
   // Filtering variables
   $scope.query = ""; 
   $scope.auSelectedSubtree = [];
@@ -78,11 +107,6 @@ angular.module('nahuel11App')
 
   $scope.showResultText = false;
 
-  $scope.searchOnEnter = function(keyEvent){
-    if (keyEvent.which === 13){
-      $scope.searchTitles();
-    }
-  };
 
   $scope.buildStringQuery = function(){
     $scope.query="";
@@ -397,31 +421,7 @@ angular.module('nahuel11App')
   // tree component initializer
   $scope.initTree = function(){
   $('#jstree_demo_div').jstree({
-     "plugins" : [ "wholerow" ],
-    /*"contextmenu": {
-      "items": function ($node) {
-          return {
-              "Create": {
-                  "label": "Crear",
-                  "action": function (obj) {
-                      this.create(obj);
-                  }
-              },
-              "Rename": {
-                  "label": "Renombrar",
-                  "action": function (obj) {
-                      this.rename(obj);
-                  }
-              },
-              "Delete": {
-                  "label": "Eliminar",
-                  "action": function (obj) {
-                      this.remove(obj);
-                  }
-              }
-          };
-      }
-    },*/
+    "plugins" : [ "wholerow" ],
     "core" : {
       "multiple" : false, // multiple nodes selection not allowed.
       "check_callback": true,

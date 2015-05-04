@@ -40,13 +40,13 @@
       <!-- Search form -->
       <form class="form-horizontal" role="form" style="margin-top: 12px;font-size: 13px;zoom:0.9; -moz-transform: scale(0.9);-moz-transform-origin: 50% 0px 0px;">
          <div class="form-group form-group-sm">
-            <label for="D" class="col-sm-3 control-label">Carrera:</label>
+            <label for="D" class="col-sm-3 control-label">Carrera</label>
             <div class="col-sm-8">
                <input class="form-control input-sm" id="D" ng-model="career" typeahead="c.careerName for c in careers | filter:$viewValue | limitTo:8">
             </div>
          </div>
          <div class="form-group form-group-sm">
-            <label for="C" class="col-sm-3 control-label">Tipo de Carrera:</label>
+            <label for="C" class="col-sm-3 control-label">Tipo de Carrera</label>
             <div class="col-sm-8">
               <!--<input class="form-control input-sm" id="C" ng-model="careerType" typeahead="ct.careerTypeName for ct in cts | filter:$viewValue | limitTo:8">-->
               <select class="selectpicker show-tick form-control" id="searchCareerType" name="searchCareerType">
@@ -56,13 +56,13 @@
             </div>
          </div>
          <div class="form-group form-group-sm">
-            <label for="F" class="col-sm-3 control-label">Título:</label>
+            <label for="F" class="col-sm-3 control-label">Título</label>
             <div class="col-sm-8">
                <input class="form-control input-sm" id="F" ng-model="title" typeahead="t.titleName for t in titleTable | filter:$viewValue | limitTo:8">
             </div>
          </div>
          <div class="form-group form-group-sm">
-            <label for="E" class="col-sm-3 control-label">Tipo de Título:</label>
+            <label for="E" class="col-sm-3 control-label">Tipo de Título</label>
             <div class="col-sm-8">
                <!--<input class="form-control input-sm" id="E" ng-model="titleType" typeahead="tt.titleTypeName for tt in ttypes | filter:$viewValue | limitTo:8">-->
                <select class="selectpicker show-tick form-control" id="searchTitleType" name="searchTitleType">
@@ -72,7 +72,7 @@
             </div>
          </div>
          <div class="form-group form-group-sm">
-            <label for="G" class="col-sm-3 control-label">Tipo de Resolución:</label>
+            <label for="G" class="col-sm-3 control-label">Tipo de Resolución</label>
             <div class="col-sm-4">
               <select class="selectpicker show-tick form-control" id="searchResolutionType" name="searchResolutionType">
                 <option value="">Todos los tipos</option> 
@@ -87,7 +87,7 @@
             </div>
          </div>
          <div class="form-group form-group-sm">
-            <label class="col-sm-3 control-label">Estado del Título:</label>
+            <label class="col-sm-3 control-label">Estado del Título</label>
             <div class="col-sm-8">
               <select class="selectpicker form-control" multiple id="searchTitleState" name="searchTitleState" title="Todos los estados">
                 <optgroup label="Título Pendiente">
@@ -385,20 +385,28 @@
             </div>
           </div> 
         <div class="col-md-8 title-attribute-value">
-        <span ng-switch on="titleSelected.state">
-          <span ng-switch-when="1">Pendiente de alta</span>
-          <span ng-switch-when="2">Pendiente de modificación</span>
-          <span ng-switch-when="3">Vigente</span>
-          <span ng-switch-when="4">No vigente sin actividad</span>
-          <span ng-switch-when="5">No vigente con actividad</span>
-          <span ng-switch-default>?</span>
-        </span>
+          <span ng-switch on="titleSelected.state">
+            <span ng-switch-when="1">Pendiente de alta</span>
+            <span ng-switch-when="2">Pendiente de modificación</span>
+            <span ng-switch-when="3">Vigente</span>
+            <span ng-switch-when="4">No vigente sin actividad</span>
+            <span ng-switch-when="5">No vigente con actividad</span>
+            <span ng-switch-default>?</span>
+          </span>
         </div>
         </div>
-        <div class="row">
+        <div class="row" ng-if="resolutions.length != 0">
           <div class="col-md-4">
-            <div class="title-attribute pull-right">
+            <div class="title-attribute pull-right" ng-if="resolutions.length == 1">
               Resolución
+            </div>
+            <div class="title-attribute pull-right" ng-if="resolutions.length > 1">
+              Resoluciones
+            </div>
+          </div>
+          <div class="col-md-8 title-attribute-value">
+            <div ng-repeat="resolution in resolutions">
+              {{resolution.resolutionTypeName}} {{resolution.resolutionNumber}}/{{resolution.resolutionYear}}
             </div>
           </div>
         </div>
@@ -577,7 +585,7 @@
       </div>
       <div class="modal-body">
           <div class="form-group" style="width: 70%; margin-left: 15%;">
-            <div style="font-weight: bold;font-size: 11pt;margin-bottom: 10px;"> Vínculo para compartir: </div>
+            <div style="font-weight: bold;font-size: 11pt;margin-bottom: 10px;"> Vínculo para compartir </div>
             <div class="input-group" style="width:100%" >
               <input readonly="true" id="inputTitleURL" class="form-control" value="{{getTitleURL()}}" style=" background-color: white; cursor: auto;" ng-focus="selectLink()">
                <span class="input-group-btn" ng-show="isFlashAvailable()">
