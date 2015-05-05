@@ -6,10 +6,6 @@ var path    = require('path');
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
 var config = JSON.parse(fs.readFileSync('/etc/nodejs-config/nahuel-1.1-frontend.json'));
 
 // serving static files
@@ -52,5 +48,5 @@ app.use(function(err, req, res, next) {
 });
 
 var server = app.listen(config.port, function() {
-  console.log('Express server listening on port ' + config.port);
+  console.log('Nahuel 1.1 Frontend application listening on port ' + config.port);
 });
