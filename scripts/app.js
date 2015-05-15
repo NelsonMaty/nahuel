@@ -27,7 +27,7 @@ angular
 
   // backend connection and methods
   .factory('dataFactory', ['$http', function($http){ 
-    var urlBase = 'http://172.16.248.229:8080/api/'; //TODO: replace it for the actual url
+    var urlBase = 'http://nodejs-nodo1-dev.psi.unc.edu.ar:3004/api/'; //TODO: replace it for the actual url
     var dataFactory = {};
     
     //get all titles
