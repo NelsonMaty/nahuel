@@ -13,7 +13,7 @@ angular.module('nahuel11App')
   /*-----------------------------------------
   -             Copy Title URL              -
   -----------------------------------------*/
-  var baseURL = "http://172.16.248.229:9000/#/titles/";
+  var baseURL = "http://nodejs-nodo1-dev.psi.unc.edu.ar:3003/#/titles/";
 
   $scope.getTitleURL = function (){
     return baseURL + $scope.titleSelected.titleCode;
