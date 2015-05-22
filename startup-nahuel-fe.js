@@ -48,6 +48,11 @@ app.get('/',isAuthenticated, function(req, res, next){
   res.set('Content-Type','text/html');
   res.send(fs.readFileSync('app/index.html'));
 });
+
+app.get('/favicon.ico', function(req, res, next){
+//  res.set('Content-Type','text/html');
+  res.send(fs.readFileSync('app/favicon.ico'));
+});
 // app.use('/', isAuthenticated, express.static(path.join(__dirname, 'app')));
 // app.use('/', express.static(path.join(__dirname, 'app')));
 // app.use('/', isAuthenticated, express.static(path.join(__dirname, 'app')));

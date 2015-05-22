@@ -7,7 +7,6 @@ angular
     'ngAnimate',
     'ngRoute',
     'ui.bootstrap',
-    'ng-context-menu',
     'toasty'
   ])
   .config(function ($routeProvider) {
